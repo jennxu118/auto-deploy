@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       release-version:
-        description: Semantic version M (majo) m (minor) p (patch) h (hotfix patch)
+        description: Semantic version -M (majo) -m (minor) -p (patch) -h (hotfix patch)
         required: true
         default: '-p'
 
