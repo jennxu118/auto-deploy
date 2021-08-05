@@ -125,7 +125,10 @@ else # Create a release branch
   # create the release branch from the -develop branch
   git checkout -b $releaseBranch
   echo "$releaseBranch branch created."
+  
+  git commit -m "$releaseBranch branch created."
+  git push origin $releaseBranch
   # merge master to release branch
-  git merge --no-ff origin/master
-  echo "merged master to release branch."
+#  git merge --no-ff origin/master
+#  echo "merged master to release branch."
 fi
