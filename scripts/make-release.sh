@@ -33,7 +33,7 @@ then
   echo "  -p for a patch release"
   echo "  -h for a patch hotfix"
   echo ""
-  echo " Example: sh scripts/make_release.sh -p"
+  echo " Example: sh scripts/make-release.sh -p"
   echo " means create a patch release"
   exit 1
 fi
@@ -48,6 +48,7 @@ version=$(git describe --tags $(git rev-list --tags --max-count=1))
 # First time release
 if [! -z "version"]; then
   version = 0.0.0
+fi
 
 # Validate current version
 rx='^([0-9]+\.){0,2}(\*|[0-9]+)$'
@@ -134,5 +135,5 @@ else # Create a release branch
   echo "$releaseBranch branch created."
   
   git commit -m "$releaseBranch branch created."
-#  git push $releaseBranch
+  git push $releaseBranch
 fi
