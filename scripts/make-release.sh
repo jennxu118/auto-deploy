@@ -33,8 +33,8 @@ then
   echo "  -p for a patch release"
   echo "  -h for a patch hotfix"
   echo ""
-  echo " Example: sh scripts/release_hotfix.sh -p"
-  echo " means create a patch release or hotfix"
+  echo " Example: sh scripts/make_release.sh -p"
+  echo " means create a patch release"
   exit 1
 fi
 
@@ -134,8 +134,5 @@ else # Create a release branch
   echo "$releaseBranch branch created."
   
   git commit -m "$releaseBranch branch created."
-  git push $releaseBranch
-  # merge master to release branch
-  # git merge --no-ff origin/master
-  # echo "merged master to release branch."
+#  git push $releaseBranch
 fi
