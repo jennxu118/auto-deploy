@@ -47,9 +47,10 @@ version=$(git describe --tags $(git rev-list --tags --max-count=1))
 
 if [ -z "$version"]
 then echo "version is null"
-    version = 0.0.0
+     version = 0.0.0
 else
   echo "version is not null"
+  version = 0.0.0
 fi
 
 #if [ -z ${version+x} ]; then
