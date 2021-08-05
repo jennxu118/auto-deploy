@@ -97,11 +97,11 @@ then
   # If a command fails, exit the script
   set -e
 
-  if [[ $branch != "master" ]]
+  if [[ $branch != "main" ]]
   then
-    git checkout master
+    git checkout main
     git pull
-    echo "Checkout master branch."
+    echo "Checkout main branch."
   fi
 
   # establish branch variable
@@ -110,6 +110,9 @@ then
   # create the hotfix branch from the -master branch
   git checkout -b $hotfixBranch
   echo "$hotfixBranch branch created."
+
+  git commit -m "$hotfixBranch branch created."
+  git push $hotfixBranch
 
 else # Create a release branch
   # If a command fails, exit the script
@@ -131,8 +134,8 @@ else # Create a release branch
   echo "$releaseBranch branch created."
   
   git commit -m "$releaseBranch branch created."
-  git push origin $releaseBranch
+  git push $releaseBranch
   # merge master to release branch
-#  git merge --no-ff origin/master
-#  echo "merged master to release branch."
+  # git merge --no-ff origin/master
+  # echo "merged master to release branch."
 fi
