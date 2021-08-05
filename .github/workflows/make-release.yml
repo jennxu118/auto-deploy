@@ -5,7 +5,7 @@ on:
       release-version:
         description: Semantic version M (majo) m (minor) p (patch) h (hotfix patch)
         required: true
-        default: 'p'
+        default: '-p'
 
 jobs:
   make-release:
