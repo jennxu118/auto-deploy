@@ -1,0 +1,20 @@
+name: Make a new release or hotfix branch workflow
+on:
+  workflow_dispatch:
+    inputs:
+      release-version:
+        description: Semantic version M (majo) m (minor) p (patch) h (hotfix patch)
+        required: true
+        default: 'p'
+
+jobs:
+  make-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Make a new release
+        shell: bash
+        run: |
+        chmod +x ./scripts/release_hotfix.sh
+        ./scripts/release_hotfix.sh "${{ github.event.inputs.release-version }}"
