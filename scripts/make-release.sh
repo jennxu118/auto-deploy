@@ -45,12 +45,19 @@ git fetch --prune --tags
 
 version=$(git describe --tags $(git rev-list --tags --max-count=1))
 
-if [ -z ${version+x} ]; then
-  echo "version is unset";
-  version = 0.0.0
+if [ -z "$version"]
+then echo "version is null"
+    version = 0.0.0
 else
-  echo "version is set to '$version'";
+  echo "version is not null"
 fi
+
+#if [ -z ${version+x} ]; then
+#  echo "version is unset";
+#  version = 0.0.0
+#else
+#  echo "version is set to '$version'";
+#fi
 
 # Validate current version
 rx='^([0-9]+\.){0,2}(\*|[0-9]+)$'
