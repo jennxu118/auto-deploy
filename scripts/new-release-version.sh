@@ -57,7 +57,9 @@ fi
 
 # Validate current version
 rx='^([0-9]+\.){0,2}(\*|[0-9]+)$'
-if ! [[ $version =~ $rx ]]; then
+if [[ $version =~ $rx ]]; then
+  $validate=true
+else
  echo "ERROR:<->invalidated version: '$version'"
  exit 1
 fi
