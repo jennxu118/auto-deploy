@@ -25,8 +25,8 @@ jobs:
         if: success()
         shell: bash
         run: |
-          chmod +x ./scripts/new-release-version.sh
-          echo "::set-output name=RELEASE_BRANCH_NAME::$(./scripts/new-release-version.sh ${{ github.event.inputs.release-version }})"
+          chmod +x ./.github/scripts/new-release-version.sh
+          echo "::set-output name=RELEASE_BRANCH_NAME::$(./.github/scripts/new-release-version.sh ${{ github.event.inputs.release-version }})"
         id: new-release-branch-name
 
       - name: create branch
@@ -37,9 +37,9 @@ jobs:
         with:
           branch: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
 
-      - name: update python libaries
-        if: success()
-        run: make update-libs
+#      - name: update python libaries
+#        if: success()
+#        run: make update-libs
 
       - name: Create pull request into master
         if: success()
