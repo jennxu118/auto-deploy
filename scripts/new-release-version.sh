@@ -116,7 +116,7 @@ then
 
   # create the hotfix branch from the -master branch
 #  git checkout -b $hotfixBranch
-  echo $hotfixBranch
+  echo "$hotfixBranch"
 
 else # Create a release branch
   # If a command fails, exit the script
@@ -135,7 +135,7 @@ else # Create a release branch
 
   # create the release branch from the -develop branch
 #  git checkout -b $releaseBranch
-  echo $releaseBranch
+  echo "$releaseBranch"
 
     # merge master to release branch
 #  git merge --no-ff origin/master
