@@ -10,14 +10,18 @@
 # 4.3) Run command for merging origin/master to release branch
 
 # Parse command line options.
-while getopts ":Mmph" Option
+while getopts ":M::m::p::h:" Option
 do
   case $Option in
-    M ) major=true;;
-    m ) minor=true;;
-    p ) patch=true;;
+    M ) major=true
+        username=$OPTARG;;
+    m ) minor=true
+        username=$OPTARG;;
+    p ) patch=true
+        username=$OPTARG;;
     h ) is_hotfix=true
-        patch=true;;
+        patch=true
+        username=$OPTARG;;
   esac
 done
 
@@ -33,10 +37,14 @@ then
   echo "  -p for a patch release"
   echo "  -h for a patch hotfix"
   echo ""
-  echo " Example: sh scripts/make-release.sh -p"
-  echo " means create a patch release"
+  echo " Example: sh scripts/release_hotfix.sh -p"
+  echo " means create a patch release or hotfix"
   exit 1
 fi
+
+# establish branch variables
+devBranch=develop
+masterBranch=master
 
 # 1) Fetch the current release version and validate
 
@@ -99,11 +107,11 @@ then
   # If a command fails, exit the script
   set -e
 
-  if [[ $branch != "main" ]]
+  if [[ $branch != $masterBranch ]]
   then
-    git checkout main
+    git checkout $masterBranch
     git pull
-    echo "Checkout main branch."
+    echo "Checkout $masterBranch branch."
   fi
 
   # establish branch variable
@@ -113,19 +121,16 @@ then
   git checkout -b $hotfixBranch
   echo "$hotfixBranch branch created."
 
-  git commit -m "$hotfixBranch branch created."
-  git push $hotfixBranch
-
 else # Create a release branch
   # If a command fails, exit the script
   set -e
 
   # if current branch is not develop branch
-  if [[ $branch != "develop" ]]
+  if [[ $branch != $devBranch ]]
   then
-    git checkout develop
+    git checkout $devBranch
     git pull
-    echo "Checkout develop branch."
+    echo "Checkout $devBranch branch."
   fi
 
   # establish branch variable
@@ -134,7 +139,13 @@ else # Create a release branch
   # create the release branch from the -develop branch
   git checkout -b $releaseBranch
   echo "$releaseBranch branch created."
-  
+
+    # merge master to release branch
+#  git merge --no-ff origin/master
+#  echo "merged master to release branch."
+  git config user.name $username
+  git config user.email $username@users.noreply.github.com
+  git add *
   git commit -m "$releaseBranch branch created."
   git push $releaseBranch
 fi

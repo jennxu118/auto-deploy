@@ -21,4 +21,4 @@ jobs:
         shell: bash
         run: |
           chmod +x ./scripts/make-release.sh
-          ./scripts/make-release.sh "${{ github.event.inputs.release-version }}"
+          ./scripts/make-release.sh "${{ github.event.inputs.release-version }}" "${{ github.actor }}"
