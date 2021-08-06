@@ -42,6 +42,8 @@ then
   exit 1
 fi
 
+echo "username: $username"
+
 # establish branch variables
 devBranch=develop
 masterBranch=master
