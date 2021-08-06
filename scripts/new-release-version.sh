@@ -59,9 +59,9 @@ fi
 # Validate current version
 rx='^([0-9]+\.){0,2}(\*|[0-9]+)$'
 if [[ $version =~ $rx ]]; then
- echo "Current version: $version"
+# echo "Current version: $version"
 else
- echo "ERROR:<->invalidated version: '$version'"
+# echo "ERROR:<->invalidated version: '$version'"
  exit 1
 fi
 
@@ -93,11 +93,11 @@ fi
 
 next_version="${a[0]}.${a[1]}.${a[2]}"
 
-echo "Next version: $next_version"
+#echo "Next version: $next_version"
 
 # current Git branch
 branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
-echo "Current branch: $branch"
+#echo "Current branch: $branch"
 
 if [ ! -z $is_hotfix ] # Create a hotfix branch
 then
