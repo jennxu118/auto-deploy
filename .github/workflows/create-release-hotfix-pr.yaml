@@ -1,5 +1,9 @@
 name: Create Release or Hotfix Pull Request
 on:
+  create:
+    branches:
+      - release/*
+      - hotfix/*
   push:
     branches:
       - release/*
