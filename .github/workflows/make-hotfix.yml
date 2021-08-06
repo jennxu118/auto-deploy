@@ -22,6 +22,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Get new release branch name
+        if: success()
         shell: bash
         run: |
           chmod +x ./scripts/new-release-version.sh
@@ -29,11 +30,16 @@ jobs:
         id: new-release-branch-name
 
       - name: create branch
+        if: success()
         uses: peterjgrainger/action-create-branch@v2.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           branch: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
+
+      - name: update python libaries
+        if: success()
+        run: make update-libs
 
       - name: Create pull request into master
         if: success()
@@ -48,7 +54,6 @@ jobs:
             Hi!
             This PR was created by Github workflow.
 
-
       - name: Create pull request to develop
         if: success()
         uses: vsoch/pull-request-action@master
@@ -61,3 +66,4 @@ jobs:
           PULL_REQUEST_BODY: |
             Hi!
             This PR was created by Github workflow.
+
