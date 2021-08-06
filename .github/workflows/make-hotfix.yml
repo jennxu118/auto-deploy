@@ -1,4 +1,4 @@
-name: Make a new release branch and create PRs workflow
+name: Make a new hotfix branch and create PRs workflow
 on:
   workflow_dispatch:
     inputs:
