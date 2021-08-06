@@ -10,7 +10,7 @@
 # 4.3) Run command for merging origin/master to release branch
 
 # Parse command line options.
-while getopts ":M::m::p::h:" Option
+while getopts ":Mmph" Option
 do
   case $Option in
     M ) major=true;;
@@ -33,12 +33,11 @@ then
   echo "  -p for a patch release"
   echo "  -h for a patch hotfix"
   echo ""
-  echo " Example: sh scripts/release_hotfix.sh -p"
+  echo " Example: sh scripts/make-release.sh -p"
   echo " means create a patch release or hotfix"
   exit 1
 fi
 
-echo "username: $username"
 
 # establish branch variables
 devBranch=develop

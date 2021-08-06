@@ -3,9 +3,9 @@ on:
   workflow_dispatch:
     inputs:
       release-version:
-        description: Semantic version -M (majo) -m (minor) -p (patch)
+        description: Semantic version -h (hotfix patch)
         required: true
-        default: '-p'
+        default: '-h'
 
 jobs:
   make-release:
@@ -61,14 +61,3 @@ jobs:
           PULL_REQUEST_BODY: |
             Hi!
             This PR was created by Github workflow.
-
-
-#      - name: Get the version
-#        id: get_version
-#        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-#
-#      - name: Make a new release
-#        shell: bash
-#        run: |
-#          chmod +x ./scripts/make-release.sh
-#          ./scripts/make-release.sh "${{ github.event.inputs.release-version }}" "${{ github.actor }}"
