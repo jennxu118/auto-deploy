@@ -35,7 +35,7 @@ jobs:
         with:
           branch: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
 
-    - name: Create pull request into master
+     - name: Create pull request into master
       if: success()
       uses: vsoch/pull-request-action@master
       env:
@@ -48,7 +48,7 @@ jobs:
           Hi!
           This PR was created by Github workflow.
 
-    - name: Create pull request to develop
+     - name: Create pull request to develop
       if: success()
       uses: vsoch/pull-request-action@master
       env:
