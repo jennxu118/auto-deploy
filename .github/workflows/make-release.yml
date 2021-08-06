@@ -9,7 +9,7 @@ on:
 
 jobs:
   make-release:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         os: [ ubuntu-20.04 ]
