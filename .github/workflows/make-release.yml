@@ -35,10 +35,10 @@ jobs:
         with:
           branch: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
 
-     - name: Create pull request into master
-       if: success()
-       uses: vsoch/pull-request-action@master
-       env:
+      - name: Create pull request into master
+        if: success()
+        uses: vsoch/pull-request-action@master
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULL_REQUEST_BRANCH: ${{ matrix.prod-branch }}
           PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.prod-branch }}
@@ -48,10 +48,11 @@ jobs:
             Hi!
             This PR was created by Github workflow.
 
-     - name: Create pull request to develop
-       if: success()
-       uses: vsoch/pull-request-action@master
-       env:
+
+      - name: Create pull request to develop
+        if: success()
+        uses: vsoch/pull-request-action@master
+        env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULL_REQUEST_BRANCH: ${{ matrix.dev-branch }}
           PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.dev-branch }}
@@ -60,6 +61,7 @@ jobs:
           PULL_REQUEST_BODY: |
             Hi!
             This PR was created by Github workflow.
+
 
 #      - name: Get the version
 #        id: get_version
