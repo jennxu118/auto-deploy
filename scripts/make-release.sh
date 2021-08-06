@@ -13,15 +13,11 @@
 while getopts ":M::m::p::h:" Option
 do
   case $Option in
-    M ) major=true
-        username=$OPTARG;;
-    m ) minor=true
-        username=$OPTARG;;
-    p ) patch=true
-        username=$OPTARG;;
+    M ) major=true;;
+    m ) minor=true;;
+    p ) patch=true;;
     h ) is_hotfix=true
-        patch=true
-        username=$OPTARG;;
+        patch=true;;
   esac
 done
 
@@ -109,45 +105,45 @@ then
   # If a command fails, exit the script
   set -e
 
-  if [[ $branch != $masterBranch ]]
-  then
-    git checkout $masterBranch
-    git pull
-    echo "Checkout $masterBranch branch."
-  fi
+#  if [[ $branch != $masterBranch ]]
+#  then
+#    git checkout $masterBranch
+#    git pull
+#    echo "Checkout $masterBranch branch."
+#  fi
 
   # establish branch variable
   hotfixBranch=hotfix/$next_version
 
   # create the hotfix branch from the -master branch
-  git checkout -b $hotfixBranch
-  echo "$hotfixBranch branch created."
+#  git checkout -b $hotfixBranch
+  echo $hotfixBranch
 
 else # Create a release branch
   # If a command fails, exit the script
   set -e
 
   # if current branch is not develop branch
-  if [[ $branch != $devBranch ]]
-  then
-    git checkout $devBranch
-    git pull
-    echo "Checkout $devBranch branch."
-  fi
+#  if [[ $branch != $devBranch ]]
+#  then
+#    git checkout $devBranch
+#    git pull
+#    echo "Checkout $devBranch branch."
+#  fi
 
   # establish branch variable
   releaseBranch=release/$next_version
 
   # create the release branch from the -develop branch
-  git checkout -b $releaseBranch
-  echo "$releaseBranch branch created."
+#  git checkout -b $releaseBranch
+  echo $releaseBranch
 
     # merge master to release branch
 #  git merge --no-ff origin/master
 #  echo "merged master to release branch."
-  git config user.name $username
-  git config user.email $username@users.noreply.github.com
-  git add *
-  git commit -m "$releaseBranch branch created."
-  git push $releaseBranch
+#  git config user.name $username
+#  git config user.email $username@users.noreply.github.com
+#  git add *
+#  git commit -m "$releaseBranch branch created."
+#  git push $releaseBranch
 fi

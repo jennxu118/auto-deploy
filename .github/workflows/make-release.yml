@@ -9,15 +9,23 @@ on:
 
 jobs:
   make-release:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04 ]
+        dev-branch:
+          - develop
+        prod-branch:
+          - master
+
     steps:
       - uses: actions/checkout@v2
 
       - name: Get new release branch name
         shell: bash
         run: |
-          chmod +x ./scripts/go_test.sh
-          echo "::set-output name=RELEASE_BRANCH_NAME::$(./scripts/go_test.sh)"
+          chmod +x ./scripts/make-release.sh
+          echo "::set-output name=RELEASE_BRANCH_NAME::$(./scripts/make-release.sh)"
         id: new-release-branch-name
 
       - name: create branch
@@ -26,6 +34,32 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           branch: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
+
+    - name: Create pull request into master
+      if: success()
+      uses: vsoch/pull-request-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PULL_REQUEST_BRANCH: ${{ matrix.prod-branch }}
+        PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.prod-branch }}
+        PULL_REQUEST_TEAM_REVIEWERS: ${{ github.event.issue.user.login }}
+        PULL_REQUEST_DRAFT: true
+        PULL_REQUEST_BODY: |
+          Hi!
+          This PR was created by Github workflow.
+
+    - name: Create pull request to develop
+      if: success()
+      uses: vsoch/pull-request-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PULL_REQUEST_BRANCH: ${{ matrix.dev-branch }}
+        PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.dev-branch }}
+        PULL_REQUEST_TEAM_REVIEWERS: ${{ github.event.issue.user.login }}
+        PULL_REQUEST_DRAFT: true
+        PULL_REQUEST_BODY: |
+          Hi!
+          This PR was created by Github workflow.
 
 #      - name: Get the version
 #        id: get_version
