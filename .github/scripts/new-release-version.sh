@@ -95,12 +95,14 @@ then
   set -e
 
   # establish branch variable
-  echo hotfixBranch=hotfix/$next_version
+  hotfixBranch=hotfix/$next_version
+  echo hotfixBranch
 
 else # new release branch name
   # If a command fails, exit the script
   set -e
 
   # establish branch variable
-  echo releaseBranch=release/$next_version
+  releaseBranch=release/$next_version
+  echo releaseBranch
 fi
