@@ -24,8 +24,8 @@ jobs:
       - name: Get new release branch name
         shell: bash
         run: |
-          chmod +x ./scripts/create-new-version.sh
-          echo "::set-output name=RELEASE_BRANCH_NAME::$(./scripts/create-new-version.sh)"
+          chmod +x ./scripts/new-release-version.sh
+          echo "::set-output name=RELEASE_BRANCH_NAME::$(./scripts/new-release-version.sh ${{ github.event.inputs.release-version }})"
         id: new-release-branch-name
 
       - name: create branch
