@@ -45,7 +45,7 @@ masterBranch=master
 
 # 1) Fetch the current release version and validate
 
-echo "Fetch tags"
+#echo "Fetch tags"
 git fetch --prune --tags
 
 version=$(git describe --tags $(git rev-list --tags --max-count=1))
