@@ -25,7 +25,7 @@ jobs:
         shell: bash
         run: |
           chmod +x ./scripts/make-release.sh
-          echo "::set-output name=RELEASE_BRANCH_NAME::$(./scripts/make-release.sh)"
+          echo "::set-output name=RELEASE_BRANCH_NAME::$(./scripts/go_test.sh)"
         id: new-release-branch-name
 
       - name: create branch
