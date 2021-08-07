@@ -1,14 +1,10 @@
-name: 'Hello World'
-description: 'Greet someone'
+name: 'Create Release or Hotfix Pull Request'
+description: 'Create Release or Hotfix Pull Request'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  current-branch:  # the name of new branch
+    description: 'Name of new pushed branch'
     required: true
-    default: 'World'
-outputs:
-  random-number:
-    description: "Random number"
-    value: ${{ steps.random-number-generator.outputs.random-id }}
+
 runs:
   using: "composite"
   steps:

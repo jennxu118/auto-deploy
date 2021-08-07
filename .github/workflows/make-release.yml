@@ -1,0 +1,69 @@
+name: Make a new release branch and create PRs workflow
+on:
+  workflow_dispatch:
+    inputs:
+      release-version:
+        description: Semantic version -M (majo) -m (minor) -p (patch)
+        required: true
+        default: '-p'
+
+jobs:
+  make-release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04 ]
+        dev-branch:
+          - develop
+        prod-branch:
+          - main
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get new release branch name
+        if: success()
+        shell: bash
+        run: |
+          chmod +x ./.github/scripts/new-release-version.sh
+          echo "::set-output name=RELEASE_BRANCH_NAME::$(./.github/scripts/new-release-version.sh ${{ github.event.inputs.release-version }})"
+        id: new-release-branch-name
+
+      - name: create branch
+        if: success()
+        uses: peterjgrainger/action-create-branch@v2.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
+
+#      - name: update python libaries
+#        if: success()
+#        run: make update-libs
+
+      - name: Create pull request into master
+        if: success()
+        uses: vsoch/pull-request-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST_BRANCH: ${{ matrix.prod-branch }}
+          PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.prod-branch }}
+          PULL_REQUEST_TEAM_REVIEWERS: ${{ github.actor }}
+          PULL_REQUEST_DRAFT: true
+          PULL_REQUEST_BODY: |
+            Hi!
+            This PR was created by Github workflow.
+
+      - name: Create pull request to develop
+        if: success()
+        uses: vsoch/pull-request-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PULL_REQUEST_BRANCH: ${{ matrix.dev-branch }}
+          PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.dev-branch }}
+          PULL_REQUEST_TEAM_REVIEWERS: ${{ github.actor }}
+          PULL_REQUEST_DRAFT: true
+          PULL_REQUEST_BODY: |
+            Hi!
+            This PR was created by Github workflow.
+
