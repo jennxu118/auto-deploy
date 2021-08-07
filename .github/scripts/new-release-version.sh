@@ -96,7 +96,7 @@ then
 
   # establish branch variable
   hotfixBranch=hotfix/$next_version
-  echo hotfixBranch
+  echo $hotfixBranch
 
 else # new release branch name
   # If a command fails, exit the script
@@ -104,5 +104,5 @@ else # new release branch name
 
   # establish branch variable
   releaseBranch=release/$next_version
-  echo releaseBranch
+  echo $releaseBranch
 fi
