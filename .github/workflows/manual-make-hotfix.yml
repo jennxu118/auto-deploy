@@ -1,4 +1,4 @@
-name: Make a new hotfix branch and create PRs workflow
+name: Manual-Make-Hotfix
 on:
   workflow_dispatch:
     inputs:
