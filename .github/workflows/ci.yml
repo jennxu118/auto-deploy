@@ -21,4 +21,16 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
-        run: echo Hello, world ${{ github.ref }}
+        run: echo "RELEASE_VERSION='0.0.3'" >> $GITHUB_ENV
+
+      - name: Check Tag
+        id: check-tag
+        shell: bash
+        run: |
+          if [[ ${{ env.RELEASE_VERSION }} =~ ^([0-9]+\.){0,2}(\*|[0-9]+)$ ]]; then
+                    echo ::set-output name=match::true
+          fi
+          
+      - name: Metch result
+        if: steps.check-tag.outputs.match == 'true'
+        run: echo $steps.check-tag.outputs.match
