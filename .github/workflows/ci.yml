@@ -30,7 +30,7 @@ jobs:
           if [[ ${{ env.RELEASE_VERSION }} =~ ^([0-9]+\.){0,2}(\*|[0-9]+)$ ]]; then
                     echo ::set-output name=match::true
           fi
-          
+
       - name: Metch result
         if: steps.check-tag.outputs.match == 'true'
-        run: echo $steps.check-tag.outputs.match
+        run: echo Hello from jenn
