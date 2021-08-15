@@ -1,4 +1,4 @@
-name: CI - tag/deploy to prod
+name: CI - tag
 on:
   pull_request:
     branches:
@@ -7,40 +7,11 @@ on:
       - closed
 
 jobs:
-#  run-unit-tests:
-#    runs-on: ${{ matrix.os }}
-#    strategy:
-#      matrix:
-#        os: [ ubuntu-20.04 ]
-#        python-version: [ "3.8" ]
-#    steps:
-#      - uses: actions/checkout@v2
-#
-#      - name: Set up Python ${{ matrix.python-version }}
-#        uses: actions/setup-python@v1
-#        with:
-#          python-version: ${{ matrix.python-version }}
-#      - uses: webfactory/ssh-agent@v0.4.1
-#        with:
-#          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-#
-#      - name: Upgrade pip
-#        if: success()
-#        run: |
-#          python -m pip install --upgrade pip
-#          python -m pip install pipenv
-#          ssh-keyscan github.com >> ~/.ssh/known_hosts
-#          ssh-keyscan bitbucket.org >> ~/.ssh/known_hosts
-#
-#      - name: Run all Unit Tests
-#        if: success()
-#        uses: ./.github/actions/unit-test
-
   release:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-20.04 ]
+        os: [ ubuntu-latest ]
     if: github.event.pull_request.merged == true # only merged pull requests must trigger this job
     steps:
       - uses: actions/checkout@v2
@@ -59,15 +30,16 @@ jobs:
 
           echo "RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Check Tag
-        id: check-tag
-        run: |
-          if [[ ${{ env.RELEASE_VERSION }} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-                    echo ::set-output name=match::true
-          fi
+#      - name: Check Tag
+#        id: check-tag
+#        shell: bash
+#        run: |
+#          if [[ ${{ env.RELEASE_VERSION }} =~ ^([0-9]+\.){0,2}(\*|[0-9]+)$ ]]; then
+#                    echo ::set-output name=match::true
+#          fi
 
       - name: Create Release
-        if: steps.check-tag.outputs.match == 'true'
+#        if: steps.check-tag.outputs.match == 'true'
         uses: thomaseizinger/create-release@1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
