@@ -1,11 +1,11 @@
-name: Make a new release branch and create PRs workflow
+name: Manual-Make-Hotfix
 on:
   workflow_dispatch:
     inputs:
       release-version:
-        description: Semantic version -M (majo) -m (minor) -p (patch)
+        description: Semantic version -h (hotfix patch)
         required: true
-        default: '-p'
+        default: '-h'
 
 jobs:
   make-release:
@@ -40,19 +40,6 @@ jobs:
 #      - name: update python libaries
 #        if: success()
 #        run: make update-libs
-
-      - name: Create pull request into master
-        if: success()
-        uses: vsoch/pull-request-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PULL_REQUEST_BRANCH: ${{ matrix.prod-branch }}
-          PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.prod-branch }}
-          PULL_REQUEST_TEAM_REVIEWERS: ${{ github.actor }}
-          PULL_REQUEST_DRAFT: true
-          PULL_REQUEST_BODY: |
-            Hi!
-            This PR was created by Github workflow.
 
       - name: Create pull request to develop
         if: success()
