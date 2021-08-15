@@ -1,4 +1,4 @@
-name: CI - tag/deploy to prod
+name: CI - tag
 on:
   pull_request:
     branches:
