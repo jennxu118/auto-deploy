@@ -30,15 +30,16 @@ jobs:
 
           echo "RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Check Tag
-        id: check-tag
-        run: |
-          if [[ ${{ env.RELEASE_VERSION }} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-                    echo ::set-output name=match::true
-          fi
+#      - name: Check Tag
+#        id: check-tag
+#        shell: bash
+#        run: |
+#          if [[ ${{ env.RELEASE_VERSION }} =~ ^([0-9]+\.){0,2}(\*|[0-9]+)$ ]]; then
+#                    echo ::set-output name=match::true
+#          fi
 
       - name: Create Release
-        if: steps.check-tag.outputs.match == 'true'
+#        if: steps.check-tag.outputs.match == 'true'
         uses: thomaseizinger/create-release@1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
