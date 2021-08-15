@@ -1,4 +1,4 @@
-name: Make a new release branch and create PRs workflow
+name: Manual-Make-Release
 on:
   workflow_dispatch:
     inputs:
@@ -66,4 +66,3 @@ jobs:
           PULL_REQUEST_BODY: |
             Hi!
             This PR was created by Github workflow.
-
