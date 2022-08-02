@@ -11,13 +11,14 @@ on:
         type: choice
         required: true
         options:
-          - dev
-          - staging
-          - prod
-        default: dev
+          - Dev
+          - Staging
+          - Prod
+        default: Dev
 
 jobs:
   make-release:
+    environment: ${{ github.event.inputs.environment }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -31,32 +32,12 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: set env
-        env:
-          ENV_NAME: ${{ github.event.inputs.environment }}
-          DEV_AWS_ACCESS_KEY_ID: 'DEV_AWS_ACCESS_KEY_ID'
-          DEV_AWS_SECRET_ACCESS_KEY: 'DEV_AWS_SECRET_ACCESS_KEY'
-          DEV_S3_BUCKET_NAME: 'DEV_S3_BUCKET_NAME'
-          STAGING_AWS_ACCESS_KEY_ID: 'STAGING_AWS_ACCESS_KEY_ID'
-          STAGING_AWS_SECRET_ACCESS_KEY: 'STAGING_AWS_SECRET_ACCESS_KEY'
-          STAGING_S3_BUCKET_NAME: 'STAGING_S3_BUCKET_NAME'
-          PROD_AWS_ACCESS_KEY_ID: 'PROD_AWS_ACCESS_KEY_ID'
-          PROD_AWS_SECRET_ACCESS_KEY: 'PROD_AWS_SECRET_ACCESS_KEY'
-          PROD_S3_BUCKET_NAME: 'PROD_S3_BUCKET_NAME'
         run: |
-          if [[ "${ENV_NAME}" == "dev" ]]; then
-            echo ${{ DEV_AWS_ACCESS_KEY_ID}}
-            echo "AWS_ACCESS_KEY_ID=${ env.DEV_AWS_ACCESS_KEY_ID }" >> $GITHUB_ENV
-            echo "AWS_SECRET_ACCESS_KEY=${ env.DEV_AWS_SECRET_ACCESS_KEY }" >> $GITHUB_ENV
-            echo "S3_BUCKET_NAME=${ env.DEV_S3_BUCKET_NAME }" >> $GITHUB_ENV
-          elif [[ "${ENV_NAME}" == "staging" ]]; then
-            echo "AWS_ACCESS_KEY_ID=${ STAGING_AWS_ACCESS_KEY_ID }" >> $GITHUB_ENV
-            echo "AWS_SECRET_ACCESS_KEY=${ STAGING_AWS_SECRET_ACCESS_KEY }" >> $GITHUB_ENV
-            echo "S3_BUCKET_NAME=${ STAGING_S3_BUCKET_NAME }" >> $GITHUB_ENV
-          elif [[ "${ENV_NAME}" == "prod" ]]; then
-            echo "AWS_ACCESS_KEY_ID=${ PROD_AWS_ACCESS_KEY_ID }" >> $GITHUB_ENV
-            echo "AWS_SECRET_ACCESS_KEY=${ PROD_AWS_SECRET_ACCESS_KEY }" >> $GITHUB_ENV
-            echo "S3_BUCKET_NAME=${ PROD_S3_BUCKET_NAME }" >> $GITHUB_ENV
-          fi
+          echo ${{ secrets.AWS_ACCESS_KEY_ID }}
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}" >> $GITHUB_ENV
+
 
 #          if [[ "${ENV_NAME}" == "" ]]; then
 #            printf "Unsupported environment ${ENV_NAME}; terminating\n"
