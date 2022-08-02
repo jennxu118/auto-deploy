@@ -44,27 +44,27 @@ jobs:
           PROD_S3_BUCKET_NAME: 'PROD_S3_BUCKET_NAME'
         run: >-
           if [[ "${ENV_NAME}" == "dev" ]]; then
-            AWS_ACCESS_KEY_ID=${{ DEV_AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY=${{ DEV_AWS_SECRET_ACCESS_KEY}}
-            S3_BUCKET_NAME=${{ DEV_S3_BUCKET_NAME }}
+            echo "AWS_ACCESS_KEY_ID=${ DEV_AWS_ACCESS_KEY_ID }" >> $GITHUB_ENV
+            echo "AWS_SECRET_ACCESS_KEY=${ DEV_AWS_SECRET_ACCESS_KEY }" >> $GITHUB_ENV
+            echo "S3_BUCKET_NAME=${ DEV_S3_BUCKET_NAME }" >> $GITHUB_ENV
           elif [[ "${ENV_NAME}" == "staging" ]]; then
-            AWS_ACCESS_KEY_ID=${{ STAGING_AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY=${{ STAGING_AWS_SECRET_ACCESS_KEY }}
-            S3_BUCKET_NAME=${{ STAGING_S3_BUCKET_NAME }}
+            echo "AWS_ACCESS_KEY_ID=${ STAGING_AWS_ACCESS_KEY_ID }" >> $GITHUB_ENV
+            echo "AWS_SECRET_ACCESS_KEY=${ STAGING_AWS_SECRET_ACCESS_KEY }" >> $GITHUB_ENV
+            echo "S3_BUCKET_NAME=${ STAGING_S3_BUCKET_NAME }" >> $GITHUB_ENV
           elif [[ "${ENV_NAME}" == "prod" ]]; then
-            AWS_ACCESS_KEY_ID=${{ PROD_AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY=${{ PROD_AWS_SECRET_ACCESS_KEY }}
-            S3_BUCKET_NAME=${{ PROD_S3_BUCKET_NAME }}
+            echo "AWS_ACCESS_KEY_ID=${ PROD_AWS_ACCESS_KEY_ID }" >> $GITHUB_ENV
+            echo "AWS_SECRET_ACCESS_KEY=${ PROD_AWS_SECRET_ACCESS_KEY }" >> $GITHUB_ENV
+            echo "S3_BUCKET_NAME=${ PROD_S3_BUCKET_NAME }" >> $GITHUB_ENV
           fi
 
-          if [[ "${ENV_NAME}" == "" ]]; then
-            printf "Unsupported environment ${ENV_NAME}; terminating\n"
-            exit 1
-          fi
-
-          (echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> $GITHUB_ENV) &&
-          (echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> $GITHUB_ENV) &&
-          (echo "S3_BUCKET_NAME=${S3_BUCKET_NAME}" >> $GITHUB_ENV)
+#          if [[ "${ENV_NAME}" == "" ]]; then
+#            printf "Unsupported environment ${ENV_NAME}; terminating\n"
+#            exit 1
+#          fi
+#
+#          (echo "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" >> $GITHUB_ENV) &&
+#          (echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> $GITHUB_ENV) &&
+#          (echo "S3_BUCKET_NAME=${S3_BUCKET_NAME}" >> $GITHUB_ENV)
 
 #      - name: Print Env
 #        shell: bash
