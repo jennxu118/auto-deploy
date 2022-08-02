@@ -42,8 +42,7 @@ jobs:
           PROD_AWS_ACCESS_KEY_ID: 'PROD_AWS_ACCESS_KEY_ID'
           PROD_AWS_SECRET_ACCESS_KEY: 'PROD_AWS_SECRET_ACCESS_KEY'
           PROD_S3_BUCKET_NAME: 'PROD_S3_BUCKET_NAME'
-        shell: bash
-        run: |
+        run: >-
           AWS_ACCESS_KEY_ID=''
           AWS_SECRET_ACCESS_KEY=''
           S3_BUCKET_NAME=''
@@ -71,55 +70,55 @@ jobs:
           (echo "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> $GITHUB_ENV) &&
           (echo "S3_BUCKET_NAME=${S3_BUCKET_NAME}" >> $GITHUB_ENV)
 
-      - name: Print Env
-        shell: bash
-        run: |
-          echo ${{ env.AWS_ACCESS_KEY_ID }}
-          echo ${{ env.AWS_SECRET_ACCESS_KEY }}
-          echo ${{ env.S3_BUCKET_NAME }}
-
-      - name: Get new release branch name
-        if: success()
-        shell: bash
-        run: |
-          chmod +x ./.github/scripts/new-release-version.sh
-          echo "::set-output name=RELEASE_BRANCH_NAME::$(./.github/scripts/new-release-version.sh ${{ github.event.inputs.release-version }})"
-        id: new-release-branch-name
-
-      - name: create branch
-        if: success()
-        uses: peterjgrainger/action-create-branch@v2.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          branch: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
-
-#      - name: update python libaries
+#      - name: Print Env
+#        shell: bash
+#        run: |
+#          echo ${{ env.AWS_ACCESS_KEY_ID }}
+#          echo ${{ env.AWS_SECRET_ACCESS_KEY }}
+#          echo ${{ env.S3_BUCKET_NAME }}
+#
+#      - name: Get new release branch name
 #        if: success()
-#        run: make update-libs
-
-      - name: Create pull request into master
-        if: success()
-        uses: vsoch/pull-request-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PULL_REQUEST_BRANCH: ${{ matrix.prod-branch }}
-          PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.prod-branch }}
-          PULL_REQUEST_TEAM_REVIEWERS: ${{ github.actor }}
-          PULL_REQUEST_DRAFT: true
-          PULL_REQUEST_BODY: |
-            Hi!
-            This PR was created by Github workflow.
-
-      - name: Create pull request to develop
-        if: success()
-        uses: vsoch/pull-request-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PULL_REQUEST_BRANCH: ${{ matrix.dev-branch }}
-          PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.dev-branch }}
-          PULL_REQUEST_TEAM_REVIEWERS: ${{ github.actor }}
-          PULL_REQUEST_DRAFT: true
-          PULL_REQUEST_BODY: |
-            Hi!
-            This PR was created by Github workflow.
+#        shell: bash
+#        run: |
+#          chmod +x ./.github/scripts/new-release-version.sh
+#          echo "::set-output name=RELEASE_BRANCH_NAME::$(./.github/scripts/new-release-version.sh ${{ github.event.inputs.release-version }})"
+#        id: new-release-branch-name
+#
+#      - name: create branch
+#        if: success()
+#        uses: peterjgrainger/action-create-branch@v2.0.1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        with:
+#          branch: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
+#
+##      - name: update python libaries
+##        if: success()
+##        run: make update-libs
+#
+#      - name: Create pull request into master
+#        if: success()
+#        uses: vsoch/pull-request-action@master
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          PULL_REQUEST_BRANCH: ${{ matrix.prod-branch }}
+#          PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.prod-branch }}
+#          PULL_REQUEST_TEAM_REVIEWERS: ${{ github.actor }}
+#          PULL_REQUEST_DRAFT: true
+#          PULL_REQUEST_BODY: |
+#            Hi!
+#            This PR was created by Github workflow.
+#
+#      - name: Create pull request to develop
+#        if: success()
+#        uses: vsoch/pull-request-action@master
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          PULL_REQUEST_BRANCH: ${{ matrix.dev-branch }}
+#          PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.dev-branch }}
+#          PULL_REQUEST_TEAM_REVIEWERS: ${{ github.actor }}
+#          PULL_REQUEST_DRAFT: true
+#          PULL_REQUEST_BODY: |
+#            Hi!
+#            This PR was created by Github workflow.
