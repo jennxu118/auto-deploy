@@ -43,10 +43,6 @@ jobs:
           PROD_AWS_SECRET_ACCESS_KEY: 'PROD_AWS_SECRET_ACCESS_KEY'
           PROD_S3_BUCKET_NAME: 'PROD_S3_BUCKET_NAME'
         run: >-
-#          AWS_ACCESS_KEY_ID=''
-#          AWS_SECRET_ACCESS_KEY=''
-#          S3_BUCKET_NAME=''
-
           if [[ "${ENV_NAME}" == "dev" ]]; then
             AWS_ACCESS_KEY_ID=${{ DEV_AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY=${{ DEV_AWS_SECRET_ACCESS_KEY}}
