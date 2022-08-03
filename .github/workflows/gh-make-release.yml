@@ -39,6 +39,8 @@ jobs:
 
       - name: Create pull request into master
         if: success()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create --title "${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.prod-branch }}"
           --base ${{ matrix.prod-branch }}
@@ -59,6 +61,8 @@ jobs:
 
       - name: Create pull request to develop
         if: success()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create --title "${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.dev-branch }}"
           --base ${{ matrix.dev-branch }}
