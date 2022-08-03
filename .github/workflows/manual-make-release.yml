@@ -38,9 +38,9 @@ jobs:
         with:
           branch: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
 
-#      - name: update python libaries
-#        if: success()
-#        run: make update-libs
+      - name: reset HEAD to release branch
+        if: success()
+        run: git reset --hard ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
 
       - name: Create pull request into master
         if: success()
