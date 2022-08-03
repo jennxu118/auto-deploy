@@ -1,5 +1,6 @@
-name: CI-dev-staging-deploy
+name: ci-dev-staging-deploy
 on:
+  create:
   pull_request:
     branches:
       - main
