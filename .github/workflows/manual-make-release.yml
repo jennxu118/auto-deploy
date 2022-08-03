@@ -48,6 +48,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULL_REQUEST_BRANCH: ${{ matrix.prod-branch }}
+          PULL_REQUEST_FROM_BRANCH: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
           PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.prod-branch }}
           PULL_REQUEST_TEAM_REVIEWERS: ${{ github.actor }}
           PULL_REQUEST_DRAFT: true
@@ -61,6 +62,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PULL_REQUEST_BRANCH: ${{ matrix.dev-branch }}
+          PULL_REQUEST_FROM_BRANCH: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
           PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.dev-branch }}
           PULL_REQUEST_TEAM_REVIEWERS: ${{ github.actor }}
           PULL_REQUEST_DRAFT: true
