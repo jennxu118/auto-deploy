@@ -42,11 +42,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr create --title "${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.prod-branch }}"
-          --base ${{ matrix.prod-branch }}
-          -h ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
-          -r ${{ github.actor }}
-          -d -b "Hi!\nThis PR was created by Github workflow."
+          gh pr create --title "${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.prod-branch }}" --base ${{ matrix.prod-branch }} -H ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} -r ${{ github.actor }} -d -b "Hi!\nThis PR was created by Github workflow."
 
 #        uses: vsoch/pull-request-action@master
 #        env:
@@ -59,16 +55,20 @@ jobs:
 #            Hi!
 #            This PR was created by Github workflow.
 
-      - name: Create pull request to develop
-        if: success()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr create --title "${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.dev-branch }}"
-          --base ${{ matrix.dev-branch }}
-          -h ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
-          -r ${{ github.actor }}
-          -d -b "Hi!\nThis PR was created by Github workflow."
+#      - name: Create pull request to develop
+#        if: success()
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        run: |
+#          gh pr create --title "${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.dev-branch }}"
+#          --base ${{ matrix.dev-branch }}
+#          -H ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
+#          -r ${{ github.actor }}
+#          -d -b "Hi!\nThis PR was created by Github workflow."
+
+
+
+
 #        uses: vsoch/pull-request-action@master
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
