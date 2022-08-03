@@ -2,8 +2,12 @@ name: ci-dev-staging-deploy
 # Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-  create:
+#  create:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+  push:
+    branches:
+      - release/*
+
 jobs:
   # This workflow contains a single job called "build"
   build:
