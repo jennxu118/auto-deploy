@@ -42,9 +42,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr create --title "${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.prod-branch }}"\
-          --base ${{ matrix.prod-branch }}\
-          -H ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}\
+          gh pr create --title "${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.prod-branch }}" \
+          --base ${{ matrix.prod-branch }} \
+          -H ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} \
           -r ${{ github.actor }} -d -b "Hi!\nThis PR was created by Github workflow."
 
 #        uses: vsoch/pull-request-action@master
@@ -63,10 +63,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr create --title "${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.dev-branch }}"\
-          --base ${{ matrix.dev-branch }}\
-          -H ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}\
-          -r ${{ github.actor }}\
+          gh pr create --title "${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.dev-branch }}" \
+          --base ${{ matrix.dev-branch }} \
+          -H ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} \
+          -r ${{ github.actor }} \
           -d -b "Hi!\nThis PR was created by Github workflow."
 
 
