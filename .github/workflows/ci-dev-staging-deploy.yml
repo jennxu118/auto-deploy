@@ -1,0 +1,17 @@
+name: CI-dev-staging-deploy
+on:
+  create:
+    types: [ created, edited ]
+  push:
+    branches:
+      - release/*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run a one-line script
+        run: echo "RELEASE_VERSION='hot0.0.3'"
