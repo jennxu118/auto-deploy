@@ -40,7 +40,9 @@ jobs:
 
       - name: reset HEAD to release branch
         if: success()
-        run: git reset --hard ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
+        run: |
+
+        git reset --hard "origin/${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}"
 
       - name: Create pull request into master
         if: success()
