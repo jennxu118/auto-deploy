@@ -1,4 +1,4 @@
-name: gh-Make-Release
+name: gh-Make-pr
 on:
   workflow_dispatch:
     inputs:
