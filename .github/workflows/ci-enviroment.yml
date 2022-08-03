@@ -1,0 +1,41 @@
+name: Manual-Make-Release
+on:
+  workflow_dispatch:
+      environment:
+        description: 'The environment to deploy to'
+        type: choice
+        required: true
+        options:
+          - Dev
+          - Staging
+          - Prod
+        default: Dev
+
+jobs:
+  make-release:
+    environment: ${{ github.event.inputs.environment }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04 ]
+        dev-branch:
+          - develop
+        prod-branch:
+          - main
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: set env
+        run: |
+          echo ${{ secrets.AWS_ACCESS_KEY_ID }}
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}" >> $GITHUB_ENV
+
+      - name: Print Env
+        shell: bash
+        run: |
+          echo ${{ env.AWS_ACCESS_KEY_ID }}
+          echo ${{ env.AWS_SECRET_ACCESS_KEY }}
+          echo ${{ env.S3_BUCKET_NAME }}

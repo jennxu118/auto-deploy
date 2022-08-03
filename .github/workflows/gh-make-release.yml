@@ -1,4 +1,4 @@
-name: Manual-Make-Release
+name: gh-Make-Release
 on:
   workflow_dispatch:
     inputs:
@@ -21,7 +21,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-
       - name: Get new release branch name
         if: success()
         shell: bash
@@ -38,32 +37,20 @@ jobs:
         with:
           branch: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
 
-#      - name: update python libaries
-#        if: success()
-#        run: make update-libs
-
       - name: Create pull request into master
         if: success()
-        uses: vsoch/pull-request-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PULL_REQUEST_BRANCH: ${{ matrix.prod-branch }}
-          PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.prod-branch }}
-          PULL_REQUEST_TEAM_REVIEWERS: ${{ github.actor }}
-          PULL_REQUEST_DRAFT: true
-          PULL_REQUEST_BODY: |
-            Hi!
-            This PR was created by Github workflow.
+        run: |
+          gh pr create --title "${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.prod-branch }}"
+          gh pr create --base ${{ matrix.prod-branch }} -H ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} -r ${{ github.actor }}
+          gh pr create -d -b "Hi!\nThis PR was created by Github workflow."
+
 
       - name: Create pull request to develop
         if: success()
-        uses: vsoch/pull-request-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PULL_REQUEST_BRANCH: ${{ matrix.dev-branch }}
-          PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.dev-branch }}
-          PULL_REQUEST_TEAM_REVIEWERS: ${{ github.actor }}
-          PULL_REQUEST_DRAFT: true
-          PULL_REQUEST_BODY: |
-            Hi!
-            This PR was created by Github workflow.
+        run: |
+          gh pr create --title "${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.dev-branch }}" --base ${{ matrix.dev-branch }} -H ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} -r ${{ github.actor }} -d -b "Hi!\nThis PR was created by Github workflow."
+
