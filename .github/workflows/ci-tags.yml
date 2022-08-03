@@ -19,15 +19,15 @@ jobs:
       - name: Extract version from branch name (for release branches)
         if: startsWith(github.event.pull_request.head.ref, 'release/')
         run: |
-          echo "BRANCH_NAME=${{ github.event.pull_request.head.ref }}" >> $GIHUB_ENV
-          echo "RELEASE_VERSION=${{ BRANCH_NAME#release/ }}" >> $GIHUB_ENV
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
+          VERSION=${BRANCH_NAME#release/}
+          echo "RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Extract version from branch name (for hotfix branches)
         if: startsWith(github.event.pull_request.head.ref, 'hotfix/')
         run: |
-          echo "BRANCH_NAME=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
+          BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
           VERSION=${BRANCH_NAME#hotfix/}
-
           echo "RELEASE_VERSION=$VERSION" >> $GITHUB_ENV
 
 #      - name: Check Tag

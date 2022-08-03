@@ -1,4 +1,4 @@
-name: CI - tags/*.*.*
+name: CI - test-tags/*.*.*
 # Controls when the action will run.
 on:
   pull_request:
