@@ -1,10 +1,14 @@
 name: CI-dev-staging-deploy
 on:
-  create:
-    types: [ created, edited ]
-  push:
+  pull_request:
     branches:
-      - release/*
+      - main
+#    types: [ created, edited ]
+#  create:
+#    types: [ created, edited ]
+#  push:
+#    branches:
+#      - release/*
 
 jobs:
   build:
