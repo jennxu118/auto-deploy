@@ -56,16 +56,16 @@ jobs:
             Hi!
             This PR was created by Github workflow.
 
-      - name: Create pull request to develop
-        if: success()
-        uses: vsoch/pull-request-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PULL_REQUEST_BRANCH: ${{ matrix.dev-branch }}
-          PULL_REQUEST_FROM_BRANCH: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
-          PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.dev-branch }}
-          PULL_REQUEST_TEAM_REVIEWERS: ${{ github.actor }}
-          PULL_REQUEST_DRAFT: true
-          PULL_REQUEST_BODY: |
-            Hi!
-            This PR was created by Github workflow.
+#      - name: Create pull request to develop
+#        if: success()
+#        uses: vsoch/pull-request-action@master
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#          PULL_REQUEST_BRANCH: ${{ matrix.dev-branch }}
+#          PULL_REQUEST_FROM_BRANCH: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
+#          PULL_REQUEST_TITLE: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} into ${{ matrix.dev-branch }}
+#          PULL_REQUEST_TEAM_REVIEWERS: ${{ github.actor }}
+#          PULL_REQUEST_DRAFT: true
+#          PULL_REQUEST_BODY: |
+#            Hi!
+#            This PR was created by Github workflow.
