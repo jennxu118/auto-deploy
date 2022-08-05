@@ -1,4 +1,4 @@
-name: Manual-Make-Release
+name: Manual-Make-Release-2
 on:
   push:
     branches:
