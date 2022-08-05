@@ -27,8 +27,8 @@ jobs:
 
       - name: echo ref
         run: |
-        echo "${GITHUB_REF}"
-        echo "${github.event_name}"
+          echo "${GITHUB_REF}"
+          echo "${github.event_name}"
 
       - name: Get new release branch name
         if: ${{ (contains(github.event_name, 'workflow_dispatch')) || false }}
