@@ -25,6 +25,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Print ref
+        run: printf "ref is ${github.ref}"
+
       - name: Get new release branch name
         if: ${{ (contains(github.event_name, 'workflow_dispatch')) || false }}
         shell: bash
