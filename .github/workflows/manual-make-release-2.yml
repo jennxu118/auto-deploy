@@ -42,14 +42,14 @@ jobs:
           branch: ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME  }}
 
       - name: Create pull request into master
-        if: ${{ (contains(github.event_name, 'workflow_dispatch'))  && github.ref == 'develop' || (contains(github.event_name, 'push')) || false }}
+        if: ${{ (contains(github.event_name, 'workflow_dispatch'))  && github.ref == 'refs/heads/develop' || (contains(github.event_name, 'push')) || false }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create --title "${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.prod-branch }}" --base ${{ matrix.prod-branch }} -H ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} -r ${{ github.actor }} -d -b "Hi!\nThis PR was created by Github workflow."
 
       - name: Create pull request to develop
-        if: ${{ (contains(github.event_name, 'workflow_dispatch'))  && github.ref == matrix.prod-branch || (contains(github.event_name, 'push')) || false }}
+        if: ${{ (contains(github.event_name, 'workflow_dispatch'))  && github.ref == 'refs/heads/main' || (contains(github.event_name, 'push')) || false }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
