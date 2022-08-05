@@ -39,7 +39,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          branch: ${{ teps.new-branch-name.outputs.NEW_BRANCH_NAME  }}
+          branch: ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME  }}
 
       - name: Create pull request into master
         if: success() && ${{ (contains(github.event_name, 'workflow_dispatch'))  && github.ref == matrix.dev-branch || (contains(github.event_name, 'push')) || false }}
