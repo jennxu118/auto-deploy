@@ -33,6 +33,14 @@ jobs:
           echo "::set-output name=NEW_BRANCH_NAME::$(./.github/scripts/new-release-version.sh ${{ github.event.inputs.release-version }})"
         id: new-branch-name
 
+      - name: create branch
+        if: success() && {{ (contains(github.event_name, 'workflow_dispatch')) || false }}
+        uses: peterjgrainger/action-create-branch@v2.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: ${{ teps.new-branch-name.outputs.NEW_BRANCH_NAME  }}
+
       - name: Create pull request into master
         if: success() && ${{ (contains(github.event_name, 'workflow_dispatch'))  && github.ref == matrix.dev-branch || (contains(github.event_name, 'push')) || false }}
         env:
