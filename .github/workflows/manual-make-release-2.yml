@@ -1,0 +1,49 @@
+name: Manual-Make-Release
+on:
+  push:
+    branches:
+      - release/*
+      - hotfix/*
+  workflow_dispatch:
+    inputs:
+      release-version:
+        description: Semantic version -M (majo) -m (minor) -p (patch) -h (hotfix patch)
+        required: true
+        default: '-p'
+
+jobs:
+  make-release:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04 ]
+        dev-branch:
+          - develop
+        prod-branch:
+          - main
+
+    steps:
+      - uses: actions/checkout@v2
+
+
+      - name: Get new release branch name
+        if: success() && ${{ (contains(github.event_name, 'workflow_dispatch') }}
+        shell: bash
+        run: |
+          chmod +x ./.github/scripts/new-release-version.sh
+          echo "::set-output name=NEW_BRANCH_NAME::$(./.github/scripts/new-release-version.sh ${{ github.event.inputs.release-version }})"
+        id: new-branch-name
+
+      - name: Create pull request into master
+        if: success() && ${{ (contains(github.event_name, 'workflow_dispatch')  && github.ref == matrix.dev-branch || (contains(github.event_name, 'push') || false }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create --title "${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.prod-branch }}" --base ${{ matrix.prod-branch }} -H ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} -r ${{ github.actor }} -d -b "Hi!\nThis PR was created by Github workflow."
+
+      - name: Create pull request to develop
+        if: success() && ${{ (contains(github.event_name, 'workflow_dispatch')  && github.ref == matrix.prod-branch || (contains(github.event_name, 'push') || false }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create --title "${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.dev-branch }}" --base ${{ matrix.dev-branch }} -H ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} -r ${{ github.actor }} -d -b "Hi!\nThis PR was created by Github workflow."
