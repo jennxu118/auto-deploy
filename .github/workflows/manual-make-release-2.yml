@@ -25,9 +25,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-
       - name: Get new release branch name
-        if: success() && ${{ (contains(github.event_name, 'workflow_dispatch') }}
+        if: success() && ${{ (contains(github.event_name, 'workflow_dispatch') || false}}
         shell: bash
         run: |
           chmod +x ./.github/scripts/new-release-version.sh
