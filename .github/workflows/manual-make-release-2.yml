@@ -43,7 +43,9 @@ jobs:
 
       - name: Set env Branch
         if: ${{ (contains(github.event_name, 'push')) }}
-        run: echo "::set-output name=NEW_BRANCH_NAME::${{ GITHUB_REF#refs/*/ }}"
+        run: |
+          echo "${{ GITHUB_REF#refs/*/ }}"
+          echo "::set-output name=NEW_BRANCH_NAME::${{ GITHUB_REF#refs/*/ }}"
 
       - name: Create pull request into master
         if: ${{ (contains(github.event_name, 'workflow_dispatch'))  && github.ref == 'refs/heads/develop' || (contains(github.event_name, 'push')) && (contains(github.ref, 'refs/heads/hotfix')) || false }}
