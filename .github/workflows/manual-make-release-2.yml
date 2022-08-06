@@ -1,5 +1,5 @@
 name: Manual-Make-Release-2
-# try push
+# try
 on:
   push:
     branches:
@@ -42,16 +42,38 @@ jobs:
         with:
           branch: ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME  }}
 
+      - name: Set env Branch
+        if: ${{ (contains(github.event_name, 'push')) }}
+        run: |
+          echo "${{ github.ref }}"
+          echo "${{ github.ref_name }}"
+          echo "::set-output name=NEW_BRANCH_NAME::${{github.ref_name}}"
+        id: current-branch-name
+
       - name: Create pull request into master
-        if: ${{ (contains(github.event_name, 'workflow_dispatch'))  && github.ref == 'refs/heads/develop' || (contains(github.event_name, 'push')) && github.ref == 'refs/heads/hotfix' || false }}
+        if: ${{ (contains(github.event_name, 'workflow_dispatch'))  && github.ref == 'refs/heads/develop' || false }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr create --title "${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.prod-branch }}" --base ${{ matrix.prod-branch }} -H ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} -r ${{ github.actor }} -d -b "Hi!\nThis PR was created by Github workflow."
+          gh pr create --title "${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.prod-branch }}" --base ${{ matrix.prod-branch }} --head ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} --reviewer "${{ github.actor }}" --draft --body "Hi!\nThis PR was created by Github workflow."
 
       - name: Create pull request to develop
-        if: ${{ (contains(github.event_name, 'workflow_dispatch'))  && github.ref == 'refs/heads/main' || (contains(github.event_name, 'push')) && github.ref == 'refs/heads/release' || false }}
+        if: ${{ (contains(github.event_name, 'workflow_dispatch'))  && github.ref == 'refs/heads/main' || false }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh pr create --title "${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.dev-branch }}" --base ${{ matrix.dev-branch }} -H ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} -r ${{ github.actor }} -d -b "Hi!\nThis PR was created by Github workflow."
+          gh pr create --title "${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.dev-branch }}" --base ${{ matrix.dev-branch }} --head ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} --reviewer "${{ github.actor }}" --draft --body "Hi!\nThis PR was created by Github workflow."
+
+      - name: Create pull request into master by push
+        if: ${{ (contains(github.event_name, 'push')) && (contains(github.ref, 'refs/heads/hotfix')) || false }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create --title "${{ steps.current-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.prod-branch }}" --base ${{ matrix.prod-branch }} --head ${{ steps.current-branch-name.outputs.NEW_BRANCH_NAME }} --reviewer "${{ github.actor }}" --draft --body "Hi!\nThis PR was created by Github workflow."
+
+      - name: Create pull request to develop by push
+        if: ${{ (contains(github.event_name, 'push')) && (contains(github.ref, 'refs/heads/release')) || false }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create --title "${{ steps.current-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.dev-branch }}" --base ${{ matrix.dev-branch }} --head ${{ steps.current-branch-name.outputs.NEW_BRANCH_NAME }} --reviewer "${{ github.actor }}" --draft --body "Hi!\nThis PR was created by Github workflow."
