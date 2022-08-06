@@ -47,7 +47,7 @@ jobs:
         run: |
           echo "${{ github.ref }}"
           echo "${{ github.ref_name }}"
-          echo "::set-output name=NEW_BRANCH_NAME::${github.ref_name}"
+          echo "::set-output name=NEW_BRANCH_NAME::${{github.ref_name}}"
 
       - name: Create pull request into master
         if: ${{ (contains(github.event_name, 'workflow_dispatch'))  && github.ref == 'refs/heads/develop' || (contains(github.event_name, 'push')) && (contains(github.ref, 'refs/heads/hotfix')) || false }}
