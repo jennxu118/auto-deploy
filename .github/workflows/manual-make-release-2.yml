@@ -72,7 +72,7 @@ jobs:
           gh pr create --title "${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.prod-branch }}" --base ${{ matrix.prod-branch }} -H ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} -r ${{ github.actor }} -d -b "Hi!\nThis PR was created by Github workflow."
 
       - name: Condition to PR to develop push
-        if: ${{ (contains(github.event_name, 'push'))  }}
+        if: ${{ (contains(github.event_name, 'push')) && (contains(github.ref, 'refs/heads/release/')) }}
         run: |
           echo "PR to develop"
 
