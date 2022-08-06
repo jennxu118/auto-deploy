@@ -46,6 +46,7 @@ jobs:
         if: ${{ (contains(github.event_name, 'push')) }}
         run: |
           echo "${{ github.ref }}"
+          echo "${{ github.ref_name }}"
 #          echo "${{ github.ref#refs/heads/ }}"
 #          echo "::set-output name=NEW_BRANCH_NAME::${ github.ref#refs/heads/ }"
 
