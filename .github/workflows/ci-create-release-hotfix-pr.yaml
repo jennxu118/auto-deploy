@@ -1,0 +1,41 @@
+#name: CI - Create Release or Hotfix Pull Request
+## only one PR created when initial release or hotfix branch created
+## this workflow will be triggered to create another PR when new commit to rlease or hotfix branch
+#on:
+#  push:
+#    branches:
+#      - release/*
+#      - hotfix/*
+#
+#jobs:
+#  create-release-or-hotfix-pr:
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      matrix:
+#        os: [ ubuntu-20.04 ]
+#        dev-branch:
+#          - develop
+#        prod-branch:
+#          - master
+#
+#    steps:
+#    - name: Check out code
+#      uses: actions/checkout@v2
+#
+#    - name: Set env Branch
+#      if: success()
+#      run: echo "CURRENT_BRANCH=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+#
+#    - name: Create pull request into master
+#      if: success()
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        run: |
+#          gh pr create --title "${{ env.CURRENT_BRANCH }} into ${{ matrix.prod-branch }}" --base ${{ matrix.prod-branch }} -H ${{ CURRENT_BRANCH }} -r ${{ github.actor }} -d -b "Hi!\nThis PR was created by Github workflow."
+#
+#    - name: Create pull request to develop
+#      if: success()
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        run: |
+#          gh pr create --title "${{ env.CURRENT_BRANCH }} into ${{ matrix.dev-branch }}" --base ${{ matrix.dev-branch }} -H ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }} -r ${{ github.actor }} -d -b "Hi!\nThis PR was created by Github workflow."

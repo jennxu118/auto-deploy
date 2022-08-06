@@ -37,10 +37,6 @@ jobs:
         with:
           branch: ${{ steps.new-release-branch-name.outputs.RELEASE_BRANCH_NAME }}
 
-#      - name: update python libaries
-#        if: success()
-#        run: make update-libs
-
       - name: Create pull request to develop
         if: success()
         uses: vsoch/pull-request-action@master
