@@ -81,7 +81,7 @@ jobs:
   deploy-dev:
     if:  ${{ !(contains(github.ref, 'refs/heads/hotfix')) || false }}
     needs: [ make-release ]
-    uses: jennxu118/auto-deploy/.github/workflows/deploy.yml@develop
+    uses: .github/workflows/deploy.yml@develop
     with:
       envionment: Dev
       use_name: $GITHUB_ACTOR
