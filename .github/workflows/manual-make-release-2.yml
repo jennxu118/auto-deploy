@@ -83,7 +83,7 @@ jobs:
     needs: [ make-release ]
     uses: ./github/workflows/deploy.yml@develop
     with:
-      envionment: Dev
+      environment: Dev
       use_name: $GITHUB_ACTOR
 
   deploy-staging:
@@ -91,5 +91,5 @@ jobs:
     needs: [ make-release ]
     uses: ./github/workflows/deploy.yml@develop
     with:
-      envionment: Staging
+      environment: Staging
       use_name: $GITHUB_ACTOR
