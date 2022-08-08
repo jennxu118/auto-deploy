@@ -78,3 +78,11 @@ jobs:
 
 
 
+ # only trigger by manual create release branch and new commit to release branch
+  deploy-dev:
+    if:  ${{ !(contains(github.ref, 'refs/heads/hotfix')) || false }}
+    needs: [ make-release ]
+    uses: jennxu118/auto-deploy/.github/workflows/deploy.yml@develop
+    with:
+      environment: Dev
+      use_name: $GITHUB_ACTOR
