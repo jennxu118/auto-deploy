@@ -1,0 +1,40 @@
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'The Rocket Homes environment name to target'
+        required: false
+        type: string
+      user_name:
+        description: 'user name'
+        required: false
+        type: string
+#      aws_region:
+#        description: 'The AWS region to target'
+#        required: false
+#        type: string
+#        default: 'us-east-1'
+#    secrets:
+#      aws_access_key_id:
+#        required: false
+#      aws_secret_access_key:
+#        required: false
+
+jobs:
+  call-job:
+    runs-on: ubuntu-20.04
+    # defaults:
+    #   run:
+    #     working-directory: src/terraform
+    environment: ${{ inputs.environment }}
+    env:
+      ENV_NAME: ${{ inputs.environment }}
+      USER_NAME: ${{ inputs.user_name }}
+    steps:
+    - name: Testing
+      run: |
+        printf "ENV_NAME is ${ENV_NAME}\n"
+        printf "USER_NAME is ${USER_NAME}\n"
+#    - name: Get AWS identity
+#      run: |
+#        aws sts get-caller-identity
