@@ -85,4 +85,4 @@ jobs:
     uses: jennxu118/auto-deploy/.github/workflows/deploy.yml@develop
     with:
       environment: Dev
-      user_name: $GITHUB_ACTOR
+      user_name: $github.actor
