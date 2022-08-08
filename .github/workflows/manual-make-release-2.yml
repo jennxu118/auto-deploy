@@ -76,9 +76,9 @@ jobs:
         run: |
           gh pr create --title "${{ steps.current-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.dev-branch }}" --base ${{ matrix.dev-branch }} --head ${{ steps.current-branch-name.outputs.NEW_BRANCH_NAME }} --reviewer "${{ github.actor }}" --draft --body "Hi!\nThis PR was created by Github workflow."
 
-      -  get-ref:
-         run: |
-           echo ${{ github.ref }}
+      - name: get-ref
+        run: |
+          echo ${{ github.ref }}
 
 
 
