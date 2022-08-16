@@ -62,7 +62,7 @@ jobs:
         run:
           echo "::set-output name=NEW_BRANCH_NAME::${{ env.NEW_BRANCH_NAME }}
     outputs:
-      NEW_BRANCH_NAME: ${{ steps.set-new-branch-name.outputs.NEW_BRANCH_NAME }}
+      NEW_BRANCH_NAME: ${{ env.NEW_BRANCH_NAME }}
 
   create-pull-request:
     needs: [ make-release-hotfix ]
