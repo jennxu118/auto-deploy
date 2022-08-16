@@ -35,7 +35,7 @@ jobs:
         shell: bash
         run: |
           chmod +x ./.github/scripts/new-release-version.sh
-          echo "::set-output name=NEW_BRANCH_NAME::$(./.github/scripts/new-release-version.sh ${{ github.event.inputs.release-version }})"
+          echo "::NEW_BRANCH_NAME::$(./.github/scripts/new-release-version.sh ${{ github.event.inputs.release-version }})"
 #          NEW_BRANCH_NAME="$(./.github/scripts/new-release-version.sh ${{ github.event.inputs.release-version }})"
 #           echo "$NEW_BRANCH_NAME" >> $GITHUB_ENV
         id: new-branch-name
