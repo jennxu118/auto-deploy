@@ -50,8 +50,8 @@ jobs:
         if: ${{ (contains(github.event_name, 'workflow_dispatch')) || false }}
         run: |
           git checkout -b ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME  }}
-          git commit -a -m "new ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME  }} branch created."
-          git push --set-upstream origin ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME  }}
+#          git commit -a -m "new ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME  }} branch created."
+#          git push --set-upstream origin ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME  }}
 
       - name: Get current Branch
         if: ${{ (contains(github.event_name, 'push')) }}
