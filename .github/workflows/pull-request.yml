@@ -67,7 +67,7 @@ jobs:
           PULL_REQUEST_BODY:  ${{ inputs.pull_request_body }}
 
       - name: Create pull request to develop
-        if: ${{ (contains(inputs.event_name, 'workflow_dispatch'))  && inputs.ref == 'refs/heads/main' || false }}
+        if: ${{ (contains(inputs.event_name, 'workflow_dispatch'))  && ((contains(inputs.ref, 'refs/heads/main')) || (contains(inputs.ref, 'refs/heads/master'))) || false }}
         uses: vsoch/pull-request-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
