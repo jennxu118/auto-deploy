@@ -60,6 +60,8 @@ jobs:
       - name: Set new branch name
         id: set-new-branch-name
         run:
+          echo ${{ github.ref }}
+          echo ${{ env.NEW_BRANCH_NAME }}
           echo "::set-output name=NEW_BRANCH_NAME::${{ env.NEW_BRANCH_NAME }}"
     outputs:
       NEW_BRANCH_NAME: ${{ steps.set-new-branch-name.output.NEW_BRANCH_NAME }}
@@ -70,9 +72,9 @@ jobs:
     with:
       event_name: ${{ github.event_name }}
       ref: ${{ github.ref }}
-      new_branch_name: ${{ needs.make-release-hotfix.outputs.NEW_BRANCH_NAME }}
-      dev_branch_name: ${{ matrix.dev-branch }}
-      prod_branch_name: ${{ matrix.prod-branch }}
+      new_branch_name: ${{ needs.make-release-hotfix.NEW_BRANCH_NAME }}
+      dev_branch_name: "develop"
+      prod_branch_name: "main"
       user_name: ${{ github.actor }}
 
 #    secrets:
