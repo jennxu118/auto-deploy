@@ -59,7 +59,7 @@ jobs:
 
       - name: Set new branch name
         id: set-new-branch-name
-        run:
+        run: |
           echo ${{ github.ref }}
           echo ${{ env.NEW_BRANCH_NAME }}
           echo "::set-output name=NEW_BRANCH_NAME::${{ env.NEW_BRANCH_NAME }}"
