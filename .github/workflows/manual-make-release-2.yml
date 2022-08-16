@@ -80,8 +80,8 @@ jobs:
       dev_branch_name: ${{ matrix.dev-branch }}
       prod_branch_name: ${{ matrix.prod-branch }}
       user_name: ${{ github.actor }}
-    secrets:
-      GITHUB_TOKEN: ${{ secretes.GITHUB_TOKEN }}
+#    secrets:
+#      GITHUB_TOKEN: ${{ secretes.GITHUB_TOKEN }}
 
 
   # only trigger by manual create release branch and new commit to release branch
