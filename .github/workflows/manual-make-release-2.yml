@@ -13,7 +13,7 @@ on:
         default: '-p'
 
 jobs:
-  make-release:
+  make-release-hotfix:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -35,7 +35,8 @@ jobs:
         shell: bash
         run: |
           chmod +x ./.github/scripts/new-release-version.sh
-          echo "::set-output name=NEW_BRANCH_NAME::$(./.github/scripts/new-release-version.sh ${{ github.event.inputs.release-version }})"
+#          echo "::set-output name=NEW_BRANCH_NAME::$(./.github/scripts/new-release-version.sh ${{ github.event.inputs.release-version }})"
+          echo "NEW_BRANCH_NAME=$(./.github/scripts/new-release-version.sh ${{ github.event.inputs.release-version }})" >> $GITHUB_ENV
         id: new-branch-name
 
 #      - name: create branch
@@ -58,49 +59,35 @@ jobs:
       - name: Get current Branch
         if: ${{ (contains(github.event_name, 'push')) }}
         run: |
-          echo "::set-output name=NEW_BRANCH_NAME::${{github.ref_name}}"
+          echo "NEW_BRANCH_NAME=${{github.ref_name}}" >> $GITHUB_ENV
+#          echo "::set-output name=NEW_BRANCH_NAME::${{github.ref_name}}"
         id: current-branch-name
 
-      - name: Create pull request into master
-        if: ${{ (contains(github.event_name, 'workflow_dispatch'))  && github.ref == 'refs/heads/develop' || false }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr create --title "${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.prod-branch }}" --base ${{ matrix.prod-branch }} --head ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} --reviewer "${{ github.actor }}" --draft --body "Hi!\nThis PR was created by Github workflow."
+      - name: Set new branch name
+        id: set-new-branch-name
+        run:
+          echo "::set-output name=NEW_BRANCH_NAME::${{ env.NEW_BRANCH_NAME }}
+    outputs:
+      NEW_BRANCH_NAME: ${{ steps.set-new-branch-name.outputs.NEW_BRANCH_NAME }}
 
-      - name: Create pull request to develop
-        if: ${{ (contains(github.event_name, 'workflow_dispatch'))  && github.ref == 'refs/heads/main' || false }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr create --title "${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.dev-branch }}" --base ${{ matrix.dev-branch }} --head ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} --reviewer "${{ github.actor }}" --draft --body "Hi!\nThis PR was created by Github workflow."
-
-#      - name: Check pull request if exists
-#        if: ${{ (contains(github.event_name, 'push')) && (contains(github.ref, 'refs/heads/hotfix')) || false }}
-#        run: |
-#          output = $ (gh pr list --head ${{ steps.current-branch-name.outputs.NEW_BRANCH_NAME }} )
-#          echo ${output}
-
-      - name: Create pull request into master by push
-        if: ${{ (contains(github.event_name, 'push')) && (contains(github.ref, 'refs/heads/hotfix')) || false }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr create --title "${{ steps.current-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.prod-branch }}" --base ${{ matrix.prod-branch }} --head ${{ steps.current-branch-name.outputs.NEW_BRANCH_NAME }} --reviewer "${{ github.actor }}" --draft --body "Hi!\nThis PR was created by Github workflow."
-
-      - name: Create pull request to develop by push
-        if: ${{ (contains(github.event_name, 'push')) && (contains(github.ref, 'refs/heads/release')) || false }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr create --title "${{ steps.current-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.dev-branch }}" --base ${{ matrix.dev-branch }} --head ${{ steps.current-branch-name.outputs.NEW_BRANCH_NAME }} --reviewer "${{ github.actor }}" --draft --body "Hi!\nThis PR was created by Github workflow."
+  pull-request:
+    needs: [ make-release-hotfix ]
+    uses: jennxu118/auto-deploy/.github/workfows/pull-request.yml@develop
+    with:
+      event_name: ${{ github.event_name }}
+      ref: ${{ github.ref }}
+      new_branch_name: ${{ needs.make-release-hotfix.outputs.NEW_BRANCH_NAME
+      dev_branch_name: ${{ matrix.dev-branch }}
+      prod_branch_name: ${{ matrix.prod-branch }}
+      user_name: ${{ github.actor }}
+    secrets:
+      GITHUB_TOKEN: ${{ secretes.GITHUB_TOKEN }}
 
 
-
- # only trigger by manual create release branch and new commit to release branch
+  # only trigger by manual create release branch and new commit to release branch
 #  deploy-dev:
 #    if:  ${{ !(contains(github.ref, 'refs/heads/hotfix')) || false }}
-#    needs: [ make-release ]
+#    needs: [ make-release-hotfix ]
 #    uses: jennxu118/auto-deploy/.github/workflows/deploy.yml@develop
 #    with:
 #      environment: Dev
