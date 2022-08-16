@@ -63,13 +63,13 @@ jobs:
     outputs:
       NEW_BRANCH_NAME: ${{ steps.set-new-branch-name.outputs.NEW_BRANCH_NAME }}
 
-  pull-request:
+  create-pull-request:
     needs: [ make-release-hotfix ]
     uses: jennxu118/auto-deploy/.github/workfows/pull-request.yml@develop
     with:
       event_name: ${{ github.event_name }}
       ref: ${{ github.ref }}
-      new_branch_name: ${{ needs.make-release-hotfix.outputs.NEW_BRANCH_NAME
+      new_branch_name: ${{ needs.make-release-hotfix.outputs.NEW_BRANCH_NAME }}
       dev_branch_name: ${{ matrix.dev-branch }}
       prod_branch_name: ${{ matrix.prod-branch }}
       user_name: ${{ github.actor }}
