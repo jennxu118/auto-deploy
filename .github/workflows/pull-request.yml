@@ -43,7 +43,7 @@ on:
 
 
 jobs:
-  create-pull-request:
+  call-job:
     runs-on: ubuntu-20.04
     steps:
 
