@@ -74,7 +74,7 @@ jobs:
     with:
       event_name: ${{ github.event_name }}
       ref: ${{ github.ref }}
-      new_branch_name: ${{ needs.make-release-hotfix.NEW_BRANCH_NAME }}
+      new_branch_name: ${{ needs.make-release-hotfix.outputs.NEW_BRANCH_NAME }}
       dev_branch_name: "develop"
       prod_branch_name: "main"
       user_name: ${{ github.actor }}
