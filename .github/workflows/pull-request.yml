@@ -49,7 +49,7 @@ jobs:
       - name: echo
         run: |
           echo "event_name: ${{ inputs.event_name }}"
-          echo "refs: ${{ inputs.refs }}"
+          echo "refs: ${{ inputs.ref }}"
           echo "prod_branch_name: ${{ inputs.prod_branch_name }}"
           echo "new_branch_name: ${{ inputs.new_branch_name }}"
           echo "user_name: ${{ inputs.user_name }}"
