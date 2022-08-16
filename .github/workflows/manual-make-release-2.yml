@@ -65,7 +65,7 @@ jobs:
 
   create-pull-request:
     needs: [ make-release-hotfix ]
-    uses: jennxu118/auto-deploy/.github/workfows/pull-request.yml@develop
+    uses: jennxu118/auto-deploy/.github/workflows/pull-request.yml@develop
     with:
       event_name: ${{ github.event_name }}
       ref: ${{ github.ref }}

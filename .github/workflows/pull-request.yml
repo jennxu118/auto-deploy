@@ -46,55 +46,50 @@ jobs:
   call-job:
     runs-on: ubuntu-20.04
     steps:
-    - name: Testing
-      run: |
-        printf "event_name is ${{ inputs.event_name }}\n"
+      - name: Create pull request into master
+        if: ${{ (contains(inputs.event_name, 'workflow_dispatch'))  && inputs.ref == 'refs/heads/develop' || false }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: vsoch/pull-request-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pull_request_branch: ${{ inputs.prod-branch }}
+          pull_request_from_branch: ${{ inputs.new_branch_name }}
+          pull_request_title: ${{ inputs.new_branch_name }} into ${{ inputs.prod-branch }}
+          pull_request_team_reviewers: ${{ inputs.user_name }}
 
+      - name: Create pull request to develop
+        if: ${{ (contains(inputs.event_name, 'workflow_dispatch'))  && inputs.ref == 'refs/heads/main' || false }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: vsoch/pull-request-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pull_request_branch: ${{ inputs.prod-branch }}
+          pull_request_from_branch: ${{ inputs.new_branch_name }}
+          pull_request_title: ${{ inputs.new_branch_name }} into ${{ inputs.dev-branch }}
+          pull_request_team_reviewers: ${{ inputs.user_name }}
 
-#      - name: Create pull request into master
-#        if: ${{ (contains(inputs.event_name, 'workflow_dispatch'))  && inputs.ref == 'refs/heads/develop' || false }}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        uses: vsoch/pull-request-action@master
-#        with:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          pull_request_branch: ${{ inputs.prod-branch }}
-#          pull_request_from_branch: ${{ inputs.new_branch_name }}
-#          pull_request_title: ${{ inputs.new_branch_name }} into ${{ inputs.prod-branch }}
-#          pull_request_team_reviewers: ${{ inputs.user_name }}
-#
-#      - name: Create pull request to develop
-#        if: ${{ (contains(inputs.event_name, 'workflow_dispatch'))  && inputs.ref == 'refs/heads/main' || false }}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        uses: vsoch/pull-request-action@master
-#        with:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          pull_request_branch: ${{ inputs.prod-branch }}
-#          pull_request_from_branch: ${{ inputs.new_branch_name }}
-#          pull_request_title: ${{ inputs.new_branch_name }} into ${{ inputs.dev-branch }}
-#          pull_request_team_reviewers: ${{ inputs.user_name }}
-#
-#      - name: Create pull request into master by push
-#        if: ${{ (contains(inputs.event_name, 'push')) && (contains(inputs.ref, 'refs/heads/hotfix')) || false }}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        uses: vsoch/pull-request-action@master
-#        with:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          pull_request_branch: ${{ inputs.prod-branch }}
-#          pull_request_from_branch: ${{ inputs.new_branch_name }}
-#          pull_request_title: ${{ inputs.new_branch_name }} into ${{ inputs.prod-branch }}
-#          pull_request_team_reviewers: ${{ inputs.user_name }}
-#
-#      - name: Create pull request to develop by push
-#        if: ${{ (contains(inputs.event_name, 'push')) && (contains(inputs.ref, 'refs/heads/release')) || false }}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        uses: vsoch/pull-request-action@master
-#        with:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          pull_request_branch: ${{ inputs.prod-branch }}
-#          pull_request_from_branch: ${{ inputs.new_branch_name }}
-#          pull_request_title: ${{ inputs.new_branch_name }} into ${{ inputs.dev-branch }}
-#          pull_request_team_reviewers: ${{ inputs.user_name }}
+      - name: Create pull request into master by push
+        if: ${{ (contains(inputs.event_name, 'push')) && (contains(inputs.ref, 'refs/heads/hotfix')) || false }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: vsoch/pull-request-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pull_request_branch: ${{ inputs.prod-branch }}
+          pull_request_from_branch: ${{ inputs.new_branch_name }}
+          pull_request_title: ${{ inputs.new_branch_name }} into ${{ inputs.prod-branch }}
+          pull_request_team_reviewers: ${{ inputs.user_name }}
+
+      - name: Create pull request to develop by push
+        if: ${{ (contains(inputs.event_name, 'push')) && (contains(inputs.ref, 'refs/heads/release')) || false }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: vsoch/pull-request-action@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          pull_request_branch: ${{ inputs.prod-branch }}
+          pull_request_from_branch: ${{ inputs.new_branch_name }}
+          pull_request_title: ${{ inputs.new_branch_name }} into ${{ inputs.dev-branch }}
+          pull_request_team_reviewers: ${{ inputs.user_name }}
