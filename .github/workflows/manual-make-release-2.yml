@@ -57,6 +57,8 @@ jobs:
         id: current-branch-name
 
       - name: Create pull request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr list -S title:"${{ env.NEW_BRANCH_NAME }} into ${{ matrix.prod_branch }} base:${{ matrix.prod_branch }} head:${{ env.NEW_BRANCH_NAME }}"
           PR_EXISTS=$(gh pr list -S "is:open title:${{ env.NEW_BRANCH_NAME }} into ${{ matrix.prod_branch }} base:${{ matrix.prod_branch }} head:${{ env.NEW_BRANCH_NAME }}")
