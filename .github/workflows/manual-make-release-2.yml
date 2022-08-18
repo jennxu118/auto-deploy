@@ -60,8 +60,8 @@ jobs:
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #        run: |
-#          gh pr list -S "is:open title:'${{ env.NEW_BRANCH_NAME }} into ${{ matrix.prod-branch }}' base:${{ matrix.prod-branch }} head:${{ env.NEW_BRANCH_NAME }}"
-#          PR_EXISTS=$(gh pr list -S "is:open title:${{ env.NEW_BRANCH_NAME }} into ${{ matrix.prod-branch }} base:${{ matrix.prod-branch }} head:${{ env.NEW_BRANCH_NAME }}")
+#          gh pr list -S "is:open base:${{ matrix.prod-branch }} head:${{ env.NEW_BRANCH_NAME }}"
+#          PR_EXISTS=$(gh pr list -S "is:open base:${{ matrix.prod-branch }} head:${{ env.NEW_BRANCH_NAME }}")
 #          [[ "${PR_EXISTS}" != "" ]] && echo "Exists" || gh pr create --title "${{ env.NEW_BRANCH_NAME }} into ${{ matrix.prod-branch }}" --base ${{ matrix.prod-branch }} --head ${{ env.NEW_BRANCH_NAME }} --reviewer ${{ github.actor }} --draft --body "Hi;"
 
 #          echo gh pr list -S "is:open title:${{ env.NEW_BRANCH_NAME }} into ${{ matrix.prod-branch }} base:${{ matrix.prod-branch }} head:${{ env.NEW_BRANCH_NAME }}"
