@@ -56,11 +56,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-
-          gh pr create --title "${{ inputs.new_branch_name }} into ${{ inputs.prod_branch_name }}" --base "${{ inputs.prod_branch_name }}" --head ${{ inputs.new_branch_name }} --reviewer ${{ inputs.user_name }} --draft  --body ${{ inputs.pull_request_body }}
+          git pull
           gh pr list -S title:"${{ inputs.new_branch_name }} into ${{ inputs.prod_branch_name }} base:${{ inputs.prod_branch_name }} head:${{ inputs.new_branch_name }}"
           PR_EXISTS=$(gh pr list -S "is:open title:${{ inputs.new_branch_name }} into ${{ inputs.prod_branch_name }} base:${{ inputs.prod_branch_name }} head:${{ inputs.new_branch_name }}")
-          [[ "${PR_EXISTS}" != "" ]] && echo "Exists" || gh pr create --title "${{ inputs.new_branch_name }} into ${{ inputs.prod_branch_name }}" --base ${{ inputs.prod_branch_name }} --head ${{ inputs.new_branch_name }} --reviewer "${{ inputs.user_name }}" --draft ${{ inputs.pull_request_draft }} --body ${{ inputs.pull_request_body }}
+          [[ "${PR_EXISTS}" != "" ]] && echo "Exists" || gh pr create --title "${{ inputs.new_branch_name }} into ${{ inputs.prod_branch_name }}" --base ${{ inputs.prod_branch_name }} --head ${{ inputs.new_branch_name }} --reviewer ${{ inputs.user_name }} --draft --body ${{ inputs.pull_request_body }}
 
 
 #        uses: vsoch/pull-request-action@master
@@ -103,7 +102,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           export PR_EXISTS=$(gh pr list -S "is:open title:'${{ inputs.new_branch_name }} into ${{ inputs.dev_branch_name }}' base:${{ inputs.dev_branch_name }} head:${{ inputs.new_branch_name }}")
-          [[ "${PR_EXISTS}" != "" ]] && echo "Exists" || gh pr create --title "${{ inputs.new_branch_name }} into ${{ inputs.dev_branch_name }}" --base ${{ inputs.dev_branch_name }} --head ${{ inputs.new_branch_name }} --reviewer "${{ inputs.user_name }}" --draft ${{ inputs.pull_request_draft }} --body ${{ inputs.pull_request_body }}
+          [[ "${PR_EXISTS}" != "" ]] && echo "Exists" || gh pr create --title "${{ inputs.new_branch_name }} into ${{ inputs.dev_branch_name }}" --base ${{ inputs.dev_branch_name }} --head ${{ inputs.new_branch_name }} --reviewer ${{ inputs.user_name }} --draft --body ${{ inputs.pull_request_body }}
 #          Exists
 
 

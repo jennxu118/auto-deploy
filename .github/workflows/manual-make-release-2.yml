@@ -90,3 +90,7 @@ jobs:
 #    with:
 #      environment: Dev
 #      user_name: $github.actor
+
+#        run: |
+#          gh pr create --title "${{ inputs.new_branch_name }} into ${{ inputs.prod_branch_name }}" --base "${{ inputs.prod_branch_name }}" --head ${{ inputs.new_branch_name }} --reviewer ${{ inputs.user_name }} --draft  --body ${{ inputs.pull_request_body }}
+#          gh pr create --title "${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} into ${{ matrix.prod-branch }}" --base ${{ matrix.prod-branch }} --head ${{ steps.new-branch-name.outputs.NEW_BRANCH_NAME }} --reviewer "${{ github.actor }}" --draft --body "Hi!\nThis PR was created by Github workflow."
