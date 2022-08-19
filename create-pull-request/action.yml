@@ -76,15 +76,15 @@ runs:
         if [[ "${PR_EXISTS}" != "" ]]; then
           echo "PR exists; bypassing creation"
           exit 0
+        else
+          gh pr create \
+          --title "${{ inputs.new_branch_name }} into ${{ inputs.prod_branch_name }}" \
+          --base ${{ inputs.prod_branch_name }} \
+          --head ${{ inputs.new_branch_name }} \
+          --reviewer ${{ inputs.user_name }} \
+          --draft \
+          --body ${{ inputs.pull_request_body }}
         fi
-
-        gh pr create \
-        --title "${{ inputs.new_branch_name }} into ${{ inputs.prod_branch_name }}" \
-        --base ${{ inputs.prod_branch_name }} \
-        --head ${{ inputs.new_branch_name }} \
-        --reviewer ${{ inputs.user_name }} \
-        --draft \
-        --body ${{ inputs.pull_request_body }}
       shell: bash
 
     - name: Create pull request to develop by push
