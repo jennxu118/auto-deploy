@@ -41,7 +41,7 @@ runs:
           --head ${{ inputs.new_branch_name }} \
           --reviewer ${{ inputs.user_name }} \
           --draft \
-          --body ${{ inputs.pull_request_body }}
+          --body "${{ inputs.pull_request_body }}"
           exit 0
         fi
       shell: bash
