@@ -55,7 +55,7 @@ jobs:
           echo "NEW_BRANCH_NAME=${{github.ref_name}}" >> $GITHUB_ENV
 #          echo "::set-output name=NEW_BRANCH_NAME::${{github.ref_name}}"
         id: current-branch-name
-
+#testing
       - name: Create pull request
         if: success()
         uses: jennxu118/auto-deploy/create-pull-request@develop
