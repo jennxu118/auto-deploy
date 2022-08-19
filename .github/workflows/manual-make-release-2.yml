@@ -58,7 +58,7 @@ jobs:
 
       - name: Create pull request
         if: success()
-        uses: jennxu118/auto-deploy/create-pull-request.yml@develop
+        uses: jennxu118/auto-deploy/create-pull-request@develop
         with:
           event_name: ${{ github.event_name }}
           ref: ${{ github.ref }}
