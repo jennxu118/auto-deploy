@@ -66,6 +66,7 @@ jobs:
           dev_branch_name: ${{ matrix.dev-branch }}
           prod_branch_name: ${{ matrix.prod-branch }}
           user_name: ${{ github.actor }}
+          secret_input: ${{ secrets.GITHUB_TOKEN }}
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #        run: |
