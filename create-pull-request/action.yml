@@ -16,7 +16,7 @@ inputs:
     default: true
   pull_request_body:
     description: the body for the pull request
-    default: Hi! This PR was created by Github workflow.
+    default: "Hi! This PR was created by Github workflow."
   user_name:
     description: user name
   secret_input:
