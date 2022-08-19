@@ -42,7 +42,6 @@ runs:
           --reviewer ${{ inputs.user_name }} \
           --draft \
           --body "${{ inputs.pull_request_body }}"
-#          exit 0
         fi
       shell: bash
 
@@ -63,7 +62,7 @@ runs:
         --head ${{ inputs.new_branch_name }} \
         --reviewer ${{ inputs.user_name }} \
         --draft \
-        --body ${{ inputs.pull_request_body }}
+        --body "${{ inputs.pull_request_body }}"
       shell: bash
 
     - name: Create pull request into master by push
@@ -82,7 +81,7 @@ runs:
           --head ${{ inputs.new_branch_name }} \
           --reviewer ${{ inputs.user_name }} \
           --draft \
-          --body ${{ inputs.pull_request_body }}
+          --body "${{ inputs.pull_request_body }}"
         fi
       shell: bash
 
@@ -103,5 +102,5 @@ runs:
         --head ${{ inputs.new_branch_name }} \
         --reviewer ${{ inputs.user_name }} \
         --draft \
-        --body ${{ inputs.pull_request_body }}
+        --body "${{ inputs.pull_request_body }}"
       shell: bash
