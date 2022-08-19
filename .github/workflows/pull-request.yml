@@ -101,8 +101,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          export PR_EXISTS=$(gh pr list -S "is:open base:${{ inputs.dev_branch_name }} head:${{ inputs.new_branch_name }}")
+          PR_EXISTS=$(gh pr list -S "is:open base:${{ inputs.dev_branch_name }} head:${{ inputs.new_branch_name }}")
           [[ "${PR_EXISTS}" != "" ]] && echo "Exists" || gh pr create --title "${{ inputs.new_branch_name }} into ${{ inputs.dev_branch_name }}" --base ${{ inputs.dev_branch_name }} --head ${{ inputs.new_branch_name }} --reviewer ${{ inputs.user_name }} --draft --body ${{ inputs.pull_request_body }}
+
 #          Exists
 
 
