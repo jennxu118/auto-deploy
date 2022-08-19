@@ -49,6 +49,8 @@ runs:
 
     - name: Create pull request to develop
       if: ${{ (contains(inputs.event_name, 'workflow_dispatch'))  && ((contains(inputs.ref, 'refs/heads/main')) || (contains(inputs.ref, 'refs/heads/master'))) || false }}
+      env:
+        GH_TOKEN: ${{ inputs.secret_input }}
       run: |
         PR_EXISTS=$(gh pr list -S "is:open base:${{ inputs.dev_branch_name }} head:${{ inputs.new_branch_name }}")
         if [[ "${PR_EXISTS}" != "" ]]; then
@@ -67,6 +69,8 @@ runs:
 
     - name: Create pull request into master by push
       if: ${{ (contains(inputs.event_name, 'push')) && (contains(inputs.ref, 'refs/heads/hotfix')) || false }}
+      env:
+        GH_TOKEN: ${{ inputs.secret_input }}
       run: |
         PR_EXISTS=$(gh pr list -S "is:open base:${{ inputs.prod_branch_name }} head:${{ inputs.new_branch_name }}")
         if [[ "${PR_EXISTS}" != "" ]]; then
@@ -85,6 +89,8 @@ runs:
 
     - name: Create pull request to develop by push
       if: ${{ (contains(inputs.event_name, 'push')) && (contains(inputs.ref, 'refs/heads/release')) || false }}
+      env:
+        GH_TOKEN: ${{ inputs.secret_input }}
       run: |
         PR_EXISTS=$(gh pr list -S "is:open base:${{ inputs.dev_branch_name }} head:${{ inputs.new_branch_name }}")
         if [[ "${PR_EXISTS}" != "" ]]; then
