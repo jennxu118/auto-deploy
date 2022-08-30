@@ -1,0 +1,26 @@
+name:  choice
+on:
+  workflow_dispatch:
+    inputs:
+      stack_name:
+        description: 'which profile to choose'
+        type: choice
+        required: true
+        default: 'int'
+        options:
+        - int
+        - dqa
+
+jobs:
+  make-choice:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04 ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get-stack-name
+        run: |
+          echo ${{ inputs.stack_name }}
