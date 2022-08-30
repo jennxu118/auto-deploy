@@ -24,3 +24,16 @@ jobs:
       - name: get-stack-name
         run: |
           echo ${{ inputs.stack_name }}
+
+  make-choice2:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04 ]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: get-stack-name
+        run: |
+          echo ${{ inputs.stack_name }}
