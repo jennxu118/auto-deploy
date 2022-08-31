@@ -1,5 +1,8 @@
 name:  choice
 on:
+  push:
+    branches:
+      - develop
   workflow_dispatch:
     inputs:
       stack_name:
