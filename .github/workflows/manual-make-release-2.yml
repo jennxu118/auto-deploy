@@ -73,7 +73,7 @@ jobs:
           echo ${{ github.ref }}
 
       - name: skip
-        if: ${{ (contains(env.NEW_BRANCH_NAME, 'refs/heads/release')) || false }}
+        if: ${{ startsWith(env.NEW_BRANCH_NAME, 'release/') || false }}
         run: |
           echo "release"
 
