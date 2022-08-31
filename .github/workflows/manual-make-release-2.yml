@@ -65,10 +65,10 @@ jobs:
           secret_input: ${{ secrets.GITHUB_TOKEN }}
 
       - name: skip
-        if: ${{ !(contains(github.ref, 'refs/heads/hotfix')) || false }}
+        if: ${{ (contains(github.ref, 'refs/heads/release')) || false }}
         run: |
           echo "release"
-          
+
 #      - name: Set new branch name
 #        id: set-new-branch-name
 #        run: |
