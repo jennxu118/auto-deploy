@@ -90,7 +90,7 @@ jobs:
 #      REF: ${{ steps.set-new-branch-name.outputs.REF }}
 
   deploy-dev:
-    if:  ${{ !(contains(github.ref, 'refs/heads/release')) || false }}
+    if:  ${{ !(contains(github.ref, 'refs/heads/hotfix')) || false }}
     needs: [ make-release-hotfix ]
     uses: jennxu118/auto-deploy/.github/workflows/deploy.yml@develop
     with:
