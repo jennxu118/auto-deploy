@@ -67,6 +67,7 @@ jobs:
       - name: skip
         if: ${{ (contains(github.ref, 'refs/heads/release')) || false }}
         run: |
+          echo ${{ github.ref }}
           echo "release"
 
 #      - name: Set new branch name
