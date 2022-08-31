@@ -46,6 +46,10 @@ jobs:
           git commit -a -m "new ${{ env.NEW_BRANCH_NAME  }} branch created."
           git push --set-upstream origin ${{ env.NEW_BRANCH_NAME }}
 
+      - name: print1
+        run: |
+          echo ${{ github.ref }}
+
       - name: Get current Branch
         if: ${{ (contains(github.event_name, 'push')) }}
         run: |
