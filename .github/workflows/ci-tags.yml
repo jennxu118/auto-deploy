@@ -45,6 +45,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           prod_branch: ${{ matrix.prod-branch }}
         run: |
+
           gh release create "${{ env.RELEASE_VERSION }}" -t "release/${{ env.RELEASE_VERSION }}" --target ${{ env.prod_branch }}
 
 
