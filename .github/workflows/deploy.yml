@@ -1,3 +1,4 @@
+name: deploy
 on:
   workflow_call:
     inputs:
@@ -9,6 +10,14 @@ on:
         description: 'user name'
         required: false
         type: string
+      stack_name:
+        description: 'which profile to choose'
+        type:
+        required: true
+        default: 'int'
+        options:
+        - int
+        - dqa
 #      aws_region:
 #        description: 'The AWS region to target'
 #        required: false
@@ -30,11 +39,13 @@ jobs:
     env:
       ENV_NAME: ${{ inputs.environment }}
       USER_NAME: ${{ inputs.user_name }}
+      Stack_name: ${{ inputs.stack_name }}
     steps:
     - name: Testing
       run: |
         printf "ENV_NAME is ${ENV_NAME}\n"
         printf "USER_NAME is ${USER_NAME}\n"
+        printf "stack_name" is ${Stack_name}\"
 #    - name: Get AWS identity
 #      run: |
 #        aws sts get-caller-identity

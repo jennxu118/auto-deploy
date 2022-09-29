@@ -1,0 +1,106 @@
+name: 'Create Pull Request'
+description: 'Creates a PR for DIP repositories'
+inputs:
+  event_name:
+    description: github event name
+  ref:
+    description: github ref
+  new_branch_name:
+    description: the name of new branch
+  dev_branch_name:
+    description: the name of develop branch
+  prod_branch_name:
+    description: the name of prod branch
+  pull_request_draft:
+    description: should this be a draft PR?
+    default: true
+  pull_request_body:
+    description: the body for the pull request
+    default: "Hi! This PR was created by Github workflow."
+  user_name:
+    description: user name
+  secret_input:
+    description: secret input
+
+runs:
+  using: "composite"
+  steps:
+    - name: Create pull request into master
+      if: ${{ (contains(inputs.event_name, 'workflow_dispatch'))  && inputs.ref == 'refs/heads/develop' || false }}
+      env:
+        GH_TOKEN: ${{ inputs.secret_input }}
+      run: |
+        PR_EXISTS=$(gh pr list -S "is:open base:${{ inputs.prod_branch_name }} head:${{ inputs.new_branch_name }}")
+        if [[ "${PR_EXISTS}" != "" ]]; then
+          echo "PR exists; bypassing creation"
+          exit 0
+        fi
+
+        gh pr create \
+        --title "${{ inputs.new_branch_name }} into ${{ inputs.prod_branch_name }}" \
+        --base ${{ inputs.prod_branch_name }} \
+        --head ${{ inputs.new_branch_name }} \
+        --reviewer ${{ inputs.user_name }} \
+        --draft \
+        --body "${{ inputs.pull_request_body }}"
+      shell: bash
+
+    - name: Create pull request to develop
+      if: ${{ (contains(inputs.event_name, 'workflow_dispatch'))  && ((contains(inputs.ref, 'refs/heads/main')) || (contains(inputs.ref, 'refs/heads/master'))) || false }}
+      env:
+        GH_TOKEN: ${{ inputs.secret_input }}
+      run: |
+        PR_EXISTS=$(gh pr list -S "is:open base:${{ inputs.dev_branch_name }} head:${{ inputs.new_branch_name }}")
+        if [[ "${PR_EXISTS}" != "" ]]; then
+          echo "PR exists; bypassing creation"
+          exit 0
+        fi
+
+        gh pr create \
+        --title "${{ inputs.new_branch_name }} into ${{ inputs.dev_branch_name }}" \
+        --base ${{ inputs.dev_branch_name }} \
+        --head ${{ inputs.new_branch_name }} \
+        --reviewer ${{ inputs.user_name }} \
+        --draft \
+        --body "${{ inputs.pull_request_body }}"
+      shell: bash
+
+    - name: Create pull request into master by push
+      if: ${{ (contains(inputs.event_name, 'push')) && (contains(inputs.ref, 'refs/heads/hotfix')) || false }}
+      env:
+        GH_TOKEN: ${{ inputs.secret_input }}
+      run: |
+        PR_EXISTS=$(gh pr list -S "is:open base:${{ inputs.prod_branch_name }} head:${{ inputs.new_branch_name }}")
+        if [[ "${PR_EXISTS}" != "" ]]; then
+          echo "PR exists; bypassing creation"
+          exit 0
+        fi
+
+        gh pr create \
+        --title "${{ inputs.new_branch_name }} into ${{ inputs.prod_branch_name }}" \
+        --base ${{ inputs.prod_branch_name }} \
+        --head ${{ inputs.new_branch_name }} \
+        --reviewer ${{ inputs.user_name }} \
+        --draft \
+        --body "${{ inputs.pull_request_body }}"
+      shell: bash
+
+    - name: Create pull request to develop by push
+      if: ${{ (contains(inputs.event_name, 'push')) && (contains(inputs.ref, 'refs/heads/release')) || false }}
+      env:
+        GH_TOKEN: ${{ inputs.secret_input }}
+      run: |
+        PR_EXISTS=$(gh pr list -S "is:open base:${{ inputs.dev_branch_name }} head:${{ inputs.new_branch_name }}")
+        if [[ "${PR_EXISTS}" != "" ]]; then
+          echo "PR exists; bypassing creation"
+          exit 0
+        fi
+
+        gh pr create \
+        --title "${{ inputs.new_branch_name }} into ${{ inputs.dev_branch_name }}" \
+        --base ${{ inputs.dev_branch_name }} \
+        --head ${{ inputs.new_branch_name }} \
+        --reviewer ${{ inputs.user_name }} \
+        --draft \
+        --body "${{ inputs.pull_request_body }}"
+      shell: bash
