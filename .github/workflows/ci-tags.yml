@@ -45,7 +45,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           prod_branch: ${{ matrix.prod-branch }}
         run: |
-          git fetch && checkout ${{ env.prod_branch }}
+          git fetch origin && checkout ${{ env.prod_branch }}
           gh release create "${{ env.RELEASE_VERSION }}" -t "release/${{ env.RELEASE_VERSION }}"
 
 
