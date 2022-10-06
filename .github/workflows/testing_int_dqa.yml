@@ -1,4 +1,4 @@
-name: CD-manual-sandbox-deploy
+name: testing-int-dqa
 # 1. manual trigger this workflow: will deploy to Sandbox
 # 2. any new commits to the develop branch: will also deploy to Sandbox
 # 3. unit tests will only run when the pr created base branch are develop or master
