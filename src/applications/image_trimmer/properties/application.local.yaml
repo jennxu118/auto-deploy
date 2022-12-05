@@ -1,0 +1,26 @@
+project_package: src.applications.image_trimmer.processors
+business_process: MLS Media Image Trimmer Lambda
+business_process_id: P1010
+business_activity: MLS Media Image Trimmer
+business_activity_id: P1010-A060
+
+kafka:
+  config:
+    bootstrap_servers: "dip-msk-broker-1-sandbox-ab10aced82a9e592.elb.us-east-1.amazonaws.com:443"
+    # bootstrap_servers: http://localhost:9092
+  conformed_media_dlq_topic_name: rh.rhdc.conformedmlspipeline.utility.media.0-dead-letter
+
+s3:
+  media_conformed_files_s3_bucket_name: test-media-conformed-files-bucket
+  media_raw_files_s3_bucket_name: test-media-raw-files-bucket
+  config:
+    endpoint_url: http://localhost:4566
+
+write_log_debug: ${WRITE_LOG_DEBUG}
+extensions: ".jpg,.jpeg,.png,.webp"
+pixel_threshold: 10
+max_resize_width: 2048
+max_resize_height: 1536
+white_threshold: 240
+cropping_offset_value: -35
+image_save_quality_value: 85
