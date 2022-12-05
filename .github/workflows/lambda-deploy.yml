@@ -100,6 +100,6 @@ jobs:
 
       - name: echo env
         run: |
-          echo DEPLOY_LAMBDA
-          echo ENV_NAME
+          echo $DEPLOY_LAMBDA
+          echo $ENV_NAME
 
