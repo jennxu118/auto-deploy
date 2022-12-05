@@ -1,0 +1,137 @@
+name: lambda-deploy
+# This will only for application code deploy, not for iac deploy
+env:
+  AWS_REGION: us-east-1
+  REF_INT: 'refs/heads/develop'
+  REF_STAGING: 'refs/heads/release/'
+  REF_PROD: 'refs/tags/'
+  REF_DQA: 'refs/heads/main'
+on:
+  push:
+    paths:
+      - 'src/**'
+      - '!src/terraform/**'
+
+jobs:
+  deploy:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: src/applications
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        python-version: [ "3.8" ]
+        build-assets:
+          - rh-dip-image-trimmer
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run all Unit Tests
+        if: success()
+        uses: rockethomes/rh-dip-github-workflows/actions/python/unit-tests@2.1.1
+        with:
+          ssh_private_key: '${{ secrets.SSH_PRIVATE_KEY }}'
+
+      - name: Setup
+        if: success()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require("fs")
+
+            var refInt = process.env.REF_INT
+            var refStaging = process.env.REF_STAGING
+            var refProd = process.env.REF_PROD
+            var refDqa = process.env.REF_DQA
+
+            var awsRegion = process.env.AWS_REGION
+            var appName = process.env.APP_NAME
+            var appId = process.env.APP_ID
+
+            function appendEnvVar(k, v) {
+              fs.appendFile(process.env.GITHUB_ENV, `${k}=${v}\n`, err => {
+                if (err) {
+                  throw err
+                }
+              })
+            }
+
+            if (context.ref.startsWith(refStaging)) {
+              console.log("staging deployment detected...")
+              appendEnvVar("ENV_NAME", "staging")
+              appendEnvVar("STACK_ID", "v1")
+              appendEnvVar("AWS_IAM_ID", "GH_RHDATANONPROD_ID")
+              appendEnvVar("AWS_IAM_KEY", "GH_RHDATANONPROD_KEY")
+              appendEnvVar("AWS_ACCOUNT_ID", "170301258679")
+              appendEnvVar("s3_bucket", "S3_STAGING_BUCKET")
+              appendEnvVar("s3_key", "v1/rh-dip-image-trimmer.zip")
+              appendEnvVar("DEPLOY_LAMBDA", "true")
+            } else if (context.ref.startsWith(refProd)) {
+              console.log("prod deployment detected...")
+              appendEnvVar("ENV_NAME", "prod")
+              appendEnvVar("STACK_ID", "v1")
+              appendEnvVar("AWS_IAM_ID", "GH_IHRROCKETHOMESDATAPROD_ID")
+              appendEnvVar("AWS_IAM_KEY", "GH_IHRROCKETHOMESDATAPROD_KEY")
+              appendEnvVar("AWS_ACCOUNT_ID", "682179047808")
+              appendEnvVar("s3_bucket", "S3_PROD_BUCKET")
+              appendEnvVar("s3_key", "v1/rh-dip-image-trimmer.zip")
+              appendEnvVar("DEPLOY_LAMBDA", "true")
+            } else if (context.ref == refInt) {
+              console.log("sandbox int deployment detected...")
+              appendEnvVar("ENV_NAME", "sandbox")
+              appendEnvVar("STACK_ID", "int")
+              appendEnvVar("AWS_IAM_ID", "GH_IHRSANDBOX_ID")
+              appendEnvVar("AWS_IAM_KEY", "GH_IHRSANDBOX_KEY")
+              appendEnvVar("AWS_ACCOUNT_ID", "699613759738")
+              appendEnvVar("s3_bucket", "S3_SANDBOX_BUCKET")
+              appendEnvVar("s3_key", "int/rh-dip-image-trimmer.zip")
+              appendEnvVar("DEPLOY_LAMBDA", "true")
+            } else if (context.ref == refDqa) {
+              console.log("sandbox int deployment detected...")
+              appendEnvVar("ENV_NAME", "sandbox")
+              appendEnvVar("STACK_ID", "dqa")
+              appendEnvVar("AWS_IAM_ID", "GH_IHRSANDBOX_ID")
+              appendEnvVar("AWS_IAM_KEY", "GH_IHRSANDBOX_KEY")
+              appendEnvVar("AWS_ACCOUNT_ID", "699613759738")
+              appendEnvVar("s3_bucket", "S3_SANDBOX_BUCKET")
+              appendEnvVar("s3_key", "dqa/rh-dip-image-trimmer.zip")
+              appendEnvVar("DEPLOY_LAMBDA", "true")
+            } else {
+              console.log("CD build detected...")
+              appendEnvVar("IMAGE_REPO", appName)
+              appendEnvVar("DEPLOY_LAMBDA", "false")
+            }
+
+      - name: Create distribution files
+        if: ${{ success() && env.DEPLOY_LAMBDA == 'true' }}
+        uses: rockethomes/rh-dip-github-workflows/actions/python/dist-files@2.1.1
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        if: ${{ success() && env.DEPLOY_LAMBDA == 'true' }}
+        with:
+          name: ${{ matrix.build-assets }}.zip
+          path: dist/${{ matrix.build-assets }}.zip
+
+      - name: deploy to S3 (.zip file)
+        if: ${{ success() && env.DEPLOY_LAMBDA == 'true' }}
+        id: lambda-deploy
+        uses: rockethomes/actions/lambda-deploy@v1
+        with:
+          type: s3
+          function_name: dip-image-trimmer-${{ env.STACK_ID }}-${{ env.ENV_NAME }}
+          filename_source_path: dist/${{ matrix.build-assets }}.zip
+          s3_bucket: ${{ secrets[env.s3_bucket] }}
+          s3_key: ${{ env.s3_key }}
+          aws_access_key_id: ${{ secrets[env.AWS_IAM_ID] }}
+          aws_secret_access_key: ${{ secrets[env.AWS_IAM_KEY] }}
+
+      - name: Slack Result
+        uses: rockethomes/rh-dip-github-workflows/actions/slack-result@2.0.0
+        with:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          user_name: ${{ github.actor }}
+          job_status: ${{ job.status }}
+          environment: ${{ env.ENV_NAME }}
+          workflow: '${{ github.workflow }}'

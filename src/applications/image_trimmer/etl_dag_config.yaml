@@ -1,0 +1,66 @@
+tasks:
+  for_each_topic_partition_in_batch:
+    impl: rh_dip_core.operators.iterator.ForEach
+    inputs:
+      items: __{event["records"].values()}__
+    outputs:
+      topic_partition: __{result}__
+    targets:
+      - for_each_media_item_in_topic_partition
+
+  for_each_media_item_in_topic_partition:
+    impl: rh_dip_core.operators.iterator.ForEach
+    inputs:
+      items: __{inputs.get("topic_partition")}__
+    outputs:
+      raw_media_item: __{utils.parse_json(result.get("value"),True)}__
+    targets:
+      - get_raw_image_object
+
+  get_raw_image_object:
+    impl: rh_dip_core.operators.s3.GetObject
+    config: ${s3.config}
+    inputs:
+      # If MediaStatus is 'removed_at_source' stop process since RawMediaURl and SourceMediaURL was removed from payload
+      condition: __{inputs.get("raw_media_item").get("MediaStatus") != "removed_at_source"}__
+      bucket: ${s3.media_raw_files_s3_bucket_name}
+      # Get the bucket folder path from S3 https url.
+      # Example: https://dip-media-raw-files-v1-prod-682179047808.s3.amazonaws.com/photo/S0130/S0130-R0100/82626637/82626637-36.jpg
+      key: __{inputs.get("raw_media_item").get("RawMediaURL").split(".com/")[1] if inputs.get("raw_media_item").get("RawMediaURL") else None}__
+    outputs:
+      image_s3_object: __{result}__
+      raw_media_payload: __{inputs.get("raw_media_item")}__
+    targets:
+      - trim_image_of_raw_media
+
+  trim_image_of_raw_media:
+      impl: src.applications.image_trimmer.processors.ImageTrimmer
+      config: ${s3.config}
+      inputs:
+        image_s3_object: __{inputs.get("image_s3_object")}__
+        raw_media_payload: __{inputs.get("raw_media_payload")}__
+        extensions: ${extensions}
+        pixel_threshold: ${pixel_threshold}
+        white_threshold: ${white_threshold}
+        write_log_debug: ${write_log_debug}
+        max_resize_width: ${max_resize_width}
+        max_resize_height: ${max_resize_height}
+        raw_s3_bucket_name: ${s3.media_raw_files_s3_bucket_name}
+        conformed_s3_bucket_name: ${s3.media_conformed_files_s3_bucket_name}
+        cropping_offset_value: ${cropping_offset_value}
+        image_save_quality_value: ${image_save_quality_value}
+        s3_config: ${s3.config}
+      outputs:
+        result: __{result}__
+      targets:
+        - save_to_media_kafka_dlq
+
+  save_to_media_kafka_dlq:
+    impl: rh_dip_core.operators.kafka.KafkaProducerService
+    config: ${kafka.config}
+    inputs:
+      condition: __{inputs.get("result").get("send_to_kafka_dlq")}__
+      value: __{utils.to_json({**inputs.get("result").get("kafka_body")}).encode()}__
+      key: __{inputs.get("result").get("kafka_body").get("MediaKey", "")}__
+      topic: ${kafka.conformed_media_dlq_topic_name}
+
