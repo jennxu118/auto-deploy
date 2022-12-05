@@ -27,12 +27,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run all Unit Tests
-        if: success()
-        uses: rockethomes/rh-dip-github-workflows/actions/python/unit-tests@2.1.1
-        with:
-          ssh_private_key: '${{ secrets.SSH_PRIVATE_KEY }}'
-
       - name: Setup
         if: success()
         uses: actions/github-script@v6
@@ -103,35 +97,8 @@ jobs:
               appendEnvVar("DEPLOY_LAMBDA", "false")
             }
 
-      - name: Create distribution files
-        if: ${{ success() && env.DEPLOY_LAMBDA == 'true' }}
-        uses: rockethomes/rh-dip-github-workflows/actions/python/dist-files@2.1.1
+      - name: echo env
+        run: |
+          echo env.DEPLOY_LAMBDA
+          echo env.ENV_NAME
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        if: ${{ success() && env.DEPLOY_LAMBDA == 'true' }}
-        with:
-          name: ${{ matrix.build-assets }}.zip
-          path: dist/${{ matrix.build-assets }}.zip
-
-      - name: deploy to S3 (.zip file)
-        if: ${{ success() && env.DEPLOY_LAMBDA == 'true' }}
-        id: lambda-deploy
-        uses: rockethomes/actions/lambda-deploy@v1
-        with:
-          type: s3
-          function_name: dip-image-trimmer-${{ env.STACK_ID }}-${{ env.ENV_NAME }}
-          filename_source_path: dist/${{ matrix.build-assets }}.zip
-          s3_bucket: ${{ secrets[env.s3_bucket] }}
-          s3_key: ${{ env.s3_key }}
-          aws_access_key_id: ${{ secrets[env.AWS_IAM_ID] }}
-          aws_secret_access_key: ${{ secrets[env.AWS_IAM_KEY] }}
-
-      - name: Slack Result
-        uses: rockethomes/rh-dip-github-workflows/actions/slack-result@2.0.0
-        with:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          user_name: ${{ github.actor }}
-          job_status: ${{ job.status }}
-          environment: ${{ env.ENV_NAME }}
-          workflow: '${{ github.workflow }}'
