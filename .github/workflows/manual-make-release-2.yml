@@ -33,8 +33,8 @@ jobs:
         if: ${{ (contains(github.event_name, 'workflow_dispatch')) || false }}
         shell: bash
         run: |
-          chmod +x ./.github/scripts/new-release-version.sh
-          echo "NEW_BRANCH_NAME=$(./.github/scripts/new-release-version.sh ${{ github.event.inputs.release-version }})" >> $GITHUB_ENV
+          chmod +x jennxu118/file_sync_repo/scripts/release_hotfix.sh@develop
+          echo "NEW_BRANCH_NAME=$(jennxu118/file_sync_repo/scripts/release_hotfix.sh@develop ${{ github.event.inputs.release-version }})" >> $GITHUB_ENV
         id: new-branch-name
 
       - name: create branch

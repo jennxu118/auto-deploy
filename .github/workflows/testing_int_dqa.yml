@@ -1,0 +1,48 @@
+name: testing-int-dqa
+# 1. manual trigger this workflow: will deploy to Sandbox
+# 2. any new commits to the develop branch: will also deploy to Sandbox
+# 3. unit tests will only run when the pr created base branch are develop or master
+on:
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+      branches:
+      - develop
+      - main
+  workflow_dispatch:
+    inputs:
+      stack_name:
+        description: 'Pickup the stack name'
+        type: choice
+        required: true
+        options:
+        - int
+        - dqa
+
+jobs:
+
+  config_sync-to-s3:
+    if: ${{ (contains(github.event_name, 'push')) && (contains(github.ref, 'refs/heads/develop')) || (contains(github.event_name, 'push')) && (contains(github.ref, 'refs/heads/main')) || (contains(github.event_name, 'workflow_dispatch')) }}
+    runs-on: ${{ matrix.os }}
+    environment:
+       name: Sandbox
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.8"]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Create Distribution files Sandbox INT
+        if: ${{ (contains(github.event_name, 'workflow_dispatch')) && !startsWith(inputs.stack_name, 'dqa') || (contains(github.event_name, 'push')) && (contains(github.ref, 'refs/heads/develop'))}}
+        run: |
+          echo int
+
+      - name: Create Distribution files Sandbox DQA
+        if: ${{ startsWith(inputs.stack_name, 'dqa') && (contains(github.event_name, 'workflow_dispatch')) || (contains(github.event_name, 'push')) && (contains(github.ref, 'refs/heads/main')) }}
+        run: |
+          echo dqa
+

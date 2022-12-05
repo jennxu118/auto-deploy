@@ -1,0 +1,106 @@
+name: lambda-deploy
+# This will only for application code deploy, not for iac deploy
+env:
+  AWS_REGION: us-east-1
+  REF_INT: 'refs/heads/develop'
+  REF_STAGING: 'refs/heads/release/'
+  REF_PROD: 'refs/tags/'
+  REF_DQA: 'refs/heads/main'
+  APP_NAME: 'image-trimmer'
+on:
+  push:
+    paths:
+      - 'src/**'
+      - '.github/**'
+      - '!src/terraform/**'
+
+jobs:
+  deploy:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: src/applications
+    strategy:
+      matrix:
+        os: [ ubuntu-latest ]
+        python-version: [ "3.8" ]
+        build-assets:
+          - rh-dip-image-trimmer
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup
+        if: success()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require("fs")
+
+            var refInt = process.env.REF_INT
+            var refStaging = process.env.REF_STAGING
+            var refProd = process.env.REF_PROD
+            var refDqa = process.env.REF_DQA
+
+            var awsRegion = process.env.AWS_REGION
+            var appName = process.env.APP_NAME
+            var appId = process.env.APP_ID
+
+            function appendEnvVar(k, v) {
+              fs.appendFile(process.env.GITHUB_ENV, `${k}=${v}\n`, err => {
+                if (err) {
+                  throw err
+                }
+              })
+            }
+
+            if (context.ref.startsWith(refStaging)) {
+              console.log("staging deployment detected...")
+              appendEnvVar("ENV_NAME", "staging")
+              appendEnvVar("STACK_ID", "v1")
+              appendEnvVar("AWS_IAM_ID", "GH_RHDATANONPROD_ID")
+              appendEnvVar("AWS_IAM_KEY", "GH_RHDATANONPROD_KEY")
+              appendEnvVar("AWS_ACCOUNT_ID", "170301258679")
+              appendEnvVar("s3_bucket", "S3_STAGING_BUCKET")
+              appendEnvVar("s3_key", "v1/rh-dip-image-trimmer.zip")
+              appendEnvVar("DEPLOY_LAMBDA", "true")
+            } else if (context.ref.startsWith(refProd)) {
+              console.log("prod deployment detected...")
+              appendEnvVar("ENV_NAME", "prod")
+              appendEnvVar("STACK_ID", "v1")
+              appendEnvVar("AWS_IAM_ID", "GH_IHRROCKETHOMESDATAPROD_ID")
+              appendEnvVar("AWS_IAM_KEY", "GH_IHRROCKETHOMESDATAPROD_KEY")
+              appendEnvVar("AWS_ACCOUNT_ID", "682179047808")
+              appendEnvVar("s3_bucket", "S3_PROD_BUCKET")
+              appendEnvVar("s3_key", "v1/rh-dip-image-trimmer.zip")
+              appendEnvVar("DEPLOY_LAMBDA", "true")
+            } else if (context.ref == refInt) {
+              console.log("sandbox int deployment detected...")
+              appendEnvVar("ENV_NAME", "sandbox")
+              appendEnvVar("STACK_ID", "int")
+              appendEnvVar("AWS_IAM_ID", "GH_IHRSANDBOX_ID")
+              appendEnvVar("AWS_IAM_KEY", "GH_IHRSANDBOX_KEY")
+              appendEnvVar("AWS_ACCOUNT_ID", "699613759738")
+              appendEnvVar("s3_bucket", "S3_SANDBOX_BUCKET")
+              appendEnvVar("s3_key", "int/rh-dip-image-trimmer.zip")
+              appendEnvVar("DEPLOY_LAMBDA", "true")
+            } else if (context.ref == refDqa) {
+              console.log("sandbox int deployment detected...")
+              appendEnvVar("ENV_NAME", "sandbox")
+              appendEnvVar("STACK_ID", "dqa")
+              appendEnvVar("AWS_IAM_ID", "GH_IHRSANDBOX_ID")
+              appendEnvVar("AWS_IAM_KEY", "GH_IHRSANDBOX_KEY")
+              appendEnvVar("AWS_ACCOUNT_ID", "699613759738")
+              appendEnvVar("s3_bucket", "S3_SANDBOX_BUCKET")
+              appendEnvVar("s3_key", "dqa/rh-dip-image-trimmer.zip")
+              appendEnvVar("DEPLOY_LAMBDA", "true")
+            } else {
+              console.log("CD build detected...")
+              appendEnvVar("IMAGE_REPO", appName)
+              appendEnvVar("DEPLOY_LAMBDA", "false")
+            }
+
+      - name: echo env
+        run: |
+          echo $DEPLOY_LAMBDA
+          echo $ENV_NAME
+          echo $IMAGE_REPO
