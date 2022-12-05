@@ -6,7 +6,7 @@ env:
   REF_STAGING: 'refs/heads/release/'
   REF_PROD: 'refs/tags/'
   REF_DQA: 'refs/heads/main'
-  APP_Name: 'image-trimmer'
+  APP_NAME: 'image-trimmer'
 on:
   push:
     paths:
@@ -103,4 +103,5 @@ jobs:
         run: |
           echo $DEPLOY_LAMBDA
           echo $ENV_NAME
+          echo $IMAGE_REPO
 
