@@ -6,6 +6,7 @@ env:
   REF_STAGING: 'refs/heads/release/'
   REF_PROD: 'refs/tags/'
   REF_DQA: 'refs/heads/main'
+  APP_Name: 'image-trimmer'
 on:
   push:
     paths:
