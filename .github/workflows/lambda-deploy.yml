@@ -10,6 +10,7 @@ on:
   push:
     paths:
       - 'src/**'
+      - '.github/**'
       - '!src/terraform/**'
 
 jobs:
