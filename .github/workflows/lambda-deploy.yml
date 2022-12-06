@@ -8,13 +8,12 @@ env:
   REF_DQA: 'refs/heads/main'
   APP_NAME: 'image-trimmer'
 on:
-  release:
-    types: [ create ]
   push:
     paths:
       - 'src/**'
       - '.github/**'
       - '!src/terraform/**'
+      - 'setup.py'
 
 jobs:
   deploy:
