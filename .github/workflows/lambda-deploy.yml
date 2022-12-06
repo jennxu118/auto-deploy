@@ -8,6 +8,8 @@ env:
   REF_DQA: 'refs/heads/main'
   APP_NAME: 'image-trimmer'
 on:
+  release:
+    types: [ create ]
   push:
     paths:
       - 'src/**'
@@ -84,7 +86,7 @@ jobs:
               appendEnvVar("s3_key", "int/rh-dip-image-trimmer.zip")
               appendEnvVar("DEPLOY_LAMBDA", "true")
             } else if (context.ref == refDqa) {
-              console.log("sandbox int deployment detected...")
+              console.log("sandbox dqa deployment detected...")
               appendEnvVar("ENV_NAME", "sandbox")
               appendEnvVar("STACK_ID", "dqa")
               appendEnvVar("AWS_IAM_ID", "GH_IHRSANDBOX_ID")
@@ -103,5 +105,5 @@ jobs:
         run: |
           echo $DEPLOY_LAMBDA
           echo $ENV_NAME
+          echo $STACK_ID
           echo $IMAGE_REPO
-
