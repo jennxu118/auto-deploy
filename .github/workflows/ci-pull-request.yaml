@@ -9,10 +9,10 @@ jobs:
     steps:
       - name: echo branch name
         run: |
-        echo ${GITHUB_REF#refs/heads/}
-        echo ${github.event.pull_request.head.ref}
-        echo ${github.base_ref}
-        echo ${github.head_ref}
+          echo ${GITHUB_REF#refs/heads/}
+          echo ${github.event.pull_request.head.ref}
+          echo ${github.base_ref}
+          echo ${github.head_ref}
 
 #      - name: Extract branch name
 #        shell: bash
