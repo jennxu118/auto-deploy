@@ -1,0 +1,19 @@
+name: test-pull-request
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  check-environment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/}| sed 's/\//-/g')"
+        id: extract_branch
+  test:
+    runs-on: ubuntu-latest
+    needs: check-environment
+    steps:
+      - name: echo
+        run: echo ${{ steps.extract_branch.outputs.branch }}
