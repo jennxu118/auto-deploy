@@ -3,11 +3,14 @@ on:
   push:
     branches:
       - develop
+      - feature/**
 
 jobs:
   check-environment:
     runs-on: ubuntu-latest
     steps:
+      - name: echo branch name
+        run: echo ${GITHUB_REF#refs/heads/}
       - name: Extract branch name
         shell: bash
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/}| sed 's/\//-/g')"
