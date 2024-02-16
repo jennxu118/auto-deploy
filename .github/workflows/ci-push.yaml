@@ -28,6 +28,7 @@ jobs:
           echo ${{ github.base_ref }}
           echo ${{ github.head_ref }}
           echo "PUSH_IMAGES=false" >> $GITHUB_ENV
+          echo ${{ env.PUSH_IMAGES }}
 
       - name: bool testing
         if: ${{ env.PUSH_IMAGES }} == true
