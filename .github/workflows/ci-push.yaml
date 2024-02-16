@@ -36,11 +36,15 @@ jobs:
           echo ${{ env.NOW }}
           
 
-      - name: bool testing
-        if: ${{ env.PUSH_IMAGES == 'true' }}
+      - name: bool testing true
+        if: ${{ env.PUSH_IMAGES == true }}
         run: |
           echo "is true"
 
+      - name: bool testing false
+        if: ${{ env.PUSH_IMAGES == false }}
+        run: |
+          echo "is not true"
 
 #      - name: Extract branch name
 #        shell: bash
