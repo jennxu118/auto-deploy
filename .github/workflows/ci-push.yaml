@@ -34,9 +34,10 @@ jobs:
         run: |
           echo ${{ env.PUSH_IMAGES }}
           echo ${{ env.NOW }}
+          
 
       - name: bool testing
-        if: ${{ env.PUSH_IMAGES }} == 'true'
+        if: ${{ env.PUSH_IMAGES == 'true' }}
         run: |
           echo "is true"
 
