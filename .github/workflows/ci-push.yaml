@@ -24,6 +24,7 @@ jobs:
         run: |
           echo ${GITHUB_REF#refs/heads/}
           echo "ref_tag=${GITHUB_REF//refs\/heads\/}"
+          echo "ref_tag=${GITHUB_REF//refs\/heads\/feature\/}" 
           echo ${{ github.base_ref }}
           echo ${{ github.head_ref }}
 
