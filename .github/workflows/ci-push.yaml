@@ -23,7 +23,7 @@ jobs:
       - name: echo branch name
         run: |
           echo ${GITHUB_REF#refs/heads/}
-          echo ${GITHUB_REF//refs\/heads\}
+          echo "ref_tag=${GITHUB_REF//refs\/heads\/}"
           echo ${github.base_ref}
           echo ${github.head_ref}
 
