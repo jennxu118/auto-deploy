@@ -4,6 +4,17 @@ on:
     branches:
       - develop
       - feature/**
+      - main
+
+  workflow_dispatch:
+    inputs:
+      stack_name:
+        description: 'Pickup the stack name'
+        type: choice
+        required: true
+        options:
+        - int
+        - dqa
 
 jobs:
   check-environment:
@@ -12,8 +23,10 @@ jobs:
       - name: echo branch name
         run: |
         echo ${GITHUB_REF#refs/heads/}
+        echo ${GITHUB_REF//refs\/heads\}
         echo ${github.base_ref}
         echo ${github.head_ref}
+
 
 #      - name: Extract branch name
 #        shell: bash
