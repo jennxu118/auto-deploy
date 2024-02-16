@@ -27,8 +27,13 @@ jobs:
           echo "ref_tag=${GITHUB_REF//refs\/heads\/feature\/}" 
           echo ${{ github.base_ref }}
           echo ${{ github.head_ref }}
-          echo "PUSH_IMAGES=false" >> $GITHUB_ENV
+          echo "PUSH_IMAGES=$(false)" >> $GITHUB_ENV
+          echo "NOW=$(date)" >> $GITHUB_ENV
+
+      - name: print env
+        run: |
           echo ${{ env.PUSH_IMAGES }}
+          echo ${{ env.NOW }}
 
       - name: bool testing
         if: ${{ env.PUSH_IMAGES }} == true
