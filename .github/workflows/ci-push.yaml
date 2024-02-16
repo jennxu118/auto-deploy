@@ -28,7 +28,7 @@ jobs:
           echo ${{ github.base_ref }}
           echo ${{ github.head_ref }}
           echo "PUSH_IMAGES=${{ true }}" >> $GITHUB_ENV
-          echo "PUSH_IMAGES2=${{ true }}" >> $GITHUB_ENV
+          echo "PUSH_IMAGES2=${{ false }}" >> $GITHUB_ENV
           echo "NOW=$(date)" >> $GITHUB_ENV
 
       - name: print env
