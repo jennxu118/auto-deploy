@@ -24,8 +24,8 @@ jobs:
         run: |
           echo ${GITHUB_REF#refs/heads/}
           echo "ref_tag=${GITHUB_REF//refs\/heads\/}"
-          echo ${github.base_ref}
-          echo ${github.head_ref}
+          echo ${{ github.base_ref }}
+          echo ${{ github.head_ref }}
 
 
 #      - name: Extract branch name
