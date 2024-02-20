@@ -29,7 +29,7 @@ jobs:
           echo ${{ github.head_ref }}
           echo "PUSH_IMAGES=${{ true }}" >> $GITHUB_ENV
           echo "PUSH_IMAGES2=${{ false }}" >> $GITHUB_ENV
-          echo "DB_CLUSTER_IDENTIFIER='jxu' >> $GITHUB_ENV
+          echo "DB_CLUSTER_IDENTIFIER='jxu'" >> $GITHUB_ENV
 
       - name: print env
         run: |
