@@ -1,0 +1,41 @@
+name: test-push
+on:
+  push:
+    branches:
+      - develop
+      - feature/*
+      - main
+
+  workflow_dispatch:
+    inputs:
+      stack_name:
+        description: 'Pickup the stack name'
+        type: choice
+        required: true
+        options:
+        - int
+        - dqa
+
+jobs:
+  check-environment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo branch name
+        run: |
+          echo ${GITHUB_REF#refs/heads/}
+          echo "ref_tag=${GITHUB_REF//refs\/heads\/}"
+          echo "ref_tag=${GITHUB_REF//refs\/heads\/feature\/}" 
+          echo ${{ github.base_ref }}
+          echo ${{ github.head_ref }}
+
+
+#      - name: Extract branch name
+#        shell: bash
+#        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/}| sed 's/\//-/g')"
+#        id: extract_branch
+#  test:
+#    runs-on: ubuntu-latest
+#    needs: check-environment
+#    steps:
+#      - name: echo
+#        run: echo ${{ steps.extract_branch.outputs.branch }}
