@@ -18,7 +18,7 @@ if Path("requirements.txt").exists():
 
 setup(
     name = "auto-deploy",
-    version = "0.0.7",
+    version = "0.0.8",
     license = "proprietary",
     description = "",
     long_description = readme,
